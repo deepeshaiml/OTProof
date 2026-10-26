@@ -1,0 +1,81 @@
+asset_id,vendor,product,model,firmware_version,equipment_type,site,criticality,review_owner,last_verified
+CV-HMI-001,Rockwell Automation,FactoryTalk View Site Edition,SE Operator Station,13.0.0,HMI,Cedar Valley WTP,Critical,A. Rahman,2026-10-06
+CV-HMI-002,Rockwell Automation,FactoryTalk View Site Edition,SE Operator Station,14.0,HMI,Cedar Valley WTP,High,A. Rahman,2026-10-16
+CV-HMI-003,Rockwel Automation,FactoryTalk View SE,SE Operator Station,13.0,HMI,Cedar Valley WTP,High,A. Rahman,2026-09-23
+CV-HMI-004,Rockwell Automation,FactoryTalk View Machine Edition,PanelView Plus 7,13.0,HMI,East Pump Station,Medium,M. Patel,2026-10-12
+CV-HMI-005,Rockwell Automation,FactoryTalk View Site Edition,SE Operator Station,,HMI,North Reservoir,High,A. Rahman,2026-10-12
+CV-HMI-006,Rockwell Automation,FactoryTalk View Site Edition,Unknown,13.0,HMI,North Reservoir,High,A. Rahman,2026-10-14
+CV-HMI-007,Rockwell Automation,FactoryTalk View Site Edition,SE Operator Station,13.0,HMI,East Pump Station,High,M. Patel,2024-08-01
+CV-HMI-008,Rockwell Automation,FactoryTalk View Site Edition,SE Operator Station,13.0,HMI,South Booster Station,High,M. Patel,2026-10-04
+CV-HMI-009,Rockwell Automation,FactoryTalk View Site Edition,SE Operator Station,13.0,HMI,South Booster Station,High,M. Patel,2026-10-04
+CV-OPT-010,Rockwell Automation,Pavilion8,Pavilion8 MPC,5.19,Optimization server,Cedar Valley WTP,High,S. Khan,2026-10-11
+CV-OPT-011,Rockwell Automation,Pavilion8,Pavilion8 MPC,5.20,Optimization server,East Pump Station,Medium,S. Khan,2026-10-11
+CV-APP-012,Rockwell Automation,DataMosaix Private Cloud,DataMosaix node,7.07,Application server,Cedar Valley WTP,High,S. Khan,2026-10-08
+CV-APP-013,Rockwell Automation,DataMosaix Private Cloud,DataMosaix node,7.08,Application server,Cedar Valley WTP,Medium,S. Khan,2026-10-08
+CV-OPT-014,Rockwell Automation,Pavilion8,Pavilion8 MPC,release-5.19-hotfix,Optimization server,North Reservoir,Medium,S. Khan,2026-10-14
+CV-PLC-015,Siemens,SIMATIC S7-1500,CPU 1515-2 PN,2.9.4,PLC,Cedar Valley WTP,Critical,J. Lee,2026-10-18
+CV-OT-016,Siemens,SIMATIC S7-1500,CPU 1515-2 PN,3.1,PLC,South Booster Station,Low,K. Hassan,2025-10-01
+CV-OT-017,Siemens,SIMATIC S7-1500,CPU 1515-2 PN,14.2.1,PLC,North Reservoir,Medium,M. Patel,2026-06-28
+CV-OT-018,Emerson,DeltaV,PK Controller,14.2.1,DCS controller,North Reservoir,Critical,M. Patel,2026-06-28
+CV-OT-019,Rockwell Automation,FactoryTalk Historian,SE Historian,4.12,Historian,South Booster Station,High,S. Khan,2026-02-28
+CV-OT-020,Phoenix Contact,PLCnext Control,AXC F 2152,V2.4.7,PLC,South Booster Station,Medium,J. Lee,2026-10-04
+CV-OT-021,Siemens,SCALANCE XC,XC208 switch,3.1,Network gateway,South Booster Station,Medium,J. Lee,2026-08-24
+CV-OT-022,Mitsubishi Electric,MELSEC iQ-R,R04CPU,R1.8,PLC,North Reservoir,High,A. Rahman,2026-08-24
+CV-OT-023,Schneider Electric,Modicon M340,BMX P34 CPU,,PLC,East Pump Station,High,S. Khan,2026-02-28
+CV-OT-024,Emerson,DeltaV,PK Controller,V2.4.7,DCS controller,South Booster Station,Critical,S. Khan,2026-10-19
+CV-OT-025,Rockwell Automation,CompactLogix 5380,5069-L320ER,4.12,PLC,Cedar Valley WTP,Low,M. Patel,2025-10-01
+CV-OT-026,Phoenix Contact,PLCnext Control,AXC F 2152,12.0,PLC,North Reservoir,Critical,J. Lee,2026-10-19
+CV-OT-027,Emerson,DeltaV,PK Controller,12.0,DCS controller,North Reservoir,Low,A. Rahman,2026-02-28
+CV-OT-028,Phoenix Contact,PLCnext Control,AXC F 2152,1.2.3,PLC,North Reservoir,Medium,A. Rahman,2026-08-24
+CV-OT-029,Mitsubishi Electric,MELSEC iQ-R,R04CPU,1.2.3,PLC,Cedar Valley WTP,Critical,A. Rahman,2026-02-28
+CV-OT-030,Rockwell Automation,CompactLogix 5380,5069-L320ER,14.2.1,PLC,South Booster Station,Low,A. Rahman,2026-06-28
+CV-OT-031,Schneider Electric,Modicon M340,BMX P34 CPU,12.0,PLC,West Wellfield,Medium,S. Khan,2026-06-28
+CV-OT-032,Phoenix Contact,PLCnext Control,AXC F 2152,12.0,PLC,South Booster Station,Low,S. Khan,2026-08-24
+CV-OT-033,Phoenix Contact,PLCnext Control,AXC F 2152,3.1,PLC,North Reservoir,Medium,A. Rahman,2026-10-19
+CV-OT-034,Emerson,DeltaV,PK Controller,14.2.1,DCS controller,North Reservoir,High,J. Lee,2026-06-28
+CV-OT-035,Rockwell Automation,FactoryTalk Historian,SE Historian,12.0,Historian,East Pump Station,Medium,J. Lee,2026-02-28
+CV-OT-036,Emerson,DeltaV,PK Controller,V2.4.7,DCS controller,South Booster Station,High,K. Hassan,2026-02-28
+CV-OT-037,Rockwell Automation,FactoryTalk Historian,SE Historian,14.2.1,Historian,East Pump Station,Medium,S. Khan,2025-10-01
+CV-OT-038,Siemens,SIMATIC S7-1500,CPU 1515-2 PN,14.2.1,PLC,West Wellfield,Low,M. Patel,2026-06-28
+CV-OT-039,Phoenix Contact,PLCnext Control,AXC F 2152,R1.8,PLC,North Reservoir,High,K. Hassan,2026-02-28
+CV-OT-040,Mitsubishi Electric,MELSEC iQ-R,R04CPU,4.12,PLC,East Pump Station,Medium,J. Lee,2026-10-04
+CV-OT-041,Schneider Electric,Modicon M340,BMX P34 CPU,14.2.1,PLC,South Booster Station,Low,K. Hassan,2025-10-01
+CV-OT-042,Mitsubishi Electric,MELSEC iQ-R,R04CPU,2.9.4,PLC,West Wellfield,Critical,K. Hassan,2026-06-28
+CV-OT-043,Mitsubishi Electric,MELSEC iQ-R,R04CPU,R1.8,PLC,South Booster Station,High,M. Patel,2026-10-19
+CV-OT-044,Phoenix Contact,PLCnext Control,AXC F 2152,2.9.4,PLC,Cedar Valley WTP,High,S. Khan,2025-10-01
+CV-OT-045,Schneider Electric,EcoStruxure Control Expert,Engineering workstation,1.2.3,Engineering station,East Pump Station,Medium,K. Hassan,2025-10-01
+CV-OT-046,Rockwell Automation,CompactLogix 5380,5069-L320ER,,PLC,West Wellfield,Critical,K. Hassan,2026-10-19
+CV-OT-047,Mitsubishi Electric,MELSEC iQ-R,R04CPU,4.12,PLC,Cedar Valley WTP,Critical,J. Lee,2026-02-28
+CV-OT-048,Mitsubishi Electric,MELSEC iQ-R,R04CPU,2.9.4,PLC,Cedar Valley WTP,Low,S. Khan,2026-10-04
+CV-OT-049,Rockwell Automation,FactoryTalk Historian,SE Historian,V2.4.7,Historian,Cedar Valley WTP,Medium,S. Khan,2025-10-01
+CV-OT-050,Schneider Electric,EcoStruxure Control Expert,Engineering workstation,V2.4.7,Engineering station,South Booster Station,Low,A. Rahman,2025-10-01
+CV-OT-051,Mitsubishi Electric,MELSEC iQ-R,R04CPU,1.2.3,PLC,East Pump Station,Critical,A. Rahman,2025-10-01
+CV-OT-052,Mitsubishi Electric,MELSEC iQ-R,R04CPU,1.2.3,PLC,West Wellfield,Critical,M. Patel,2026-08-24
+CV-OT-053,Mitsubishi Electric,MELSEC iQ-R,R04CPU,V2.4.7,PLC,West Wellfield,Critical,M. Patel,2026-10-04
+CV-OT-054,Emerson,DeltaV,PK Controller,12.0,DCS controller,West Wellfield,Low,A. Rahman,2026-02-28
+CV-OT-055,Phoenix Contact,PLCnext Control,AXC F 2152,R1.8,PLC,North Reservoir,Critical,M. Patel,2026-10-04
+CV-OT-056,Emerson,DeltaV,PK Controller,14.2.1,DCS controller,South Booster Station,High,S. Khan,2026-02-28
+CV-OT-057,Emerson,DeltaV,PK Controller,4.12,DCS controller,East Pump Station,Critical,M. Patel,2026-02-28
+CV-OT-058,Phoenix Contact,PLCnext Control,AXC F 2152,4.12,PLC,North Reservoir,Critical,J. Lee,2026-02-28
+CV-OT-059,Emerson,DeltaV,PK Controller,14.2.1,DCS controller,North Reservoir,High,M. Patel,2026-02-28
+CV-OT-060,Mitsubishi Electric,MELSEC iQ-R,R04CPU,3.1,PLC,Cedar Valley WTP,Critical,J. Lee,2026-02-28
+CV-OT-061,Phoenix Contact,PLCnext Control,AXC F 2152,R1.8,PLC,South Booster Station,High,K. Hassan,2026-10-04
+CV-OT-062,Phoenix Contact,PLCnext Control,AXC F 2152,4.12,PLC,South Booster Station,Low,K. Hassan,2026-10-04
+CV-OT-063,Siemens,SCALANCE XC,XC208 switch,14.2.1,Network gateway,South Booster Station,Low,A. Rahman,2026-10-19
+CV-OT-064,Siemens,SCALANCE XC,XC208 switch,3.1,Network gateway,South Booster Station,Medium,M. Patel,2026-06-28
+CV-OT-065,Emerson,DeltaV,PK Controller,1.2.3,DCS controller,South Booster Station,Medium,M. Patel,2026-10-19
+CV-OT-066,Rockwell Automation,CompactLogix 5380,5069-L320ER,R1.8,PLC,South Booster Station,Low,M. Patel,2026-10-19
+CV-OT-067,Mitsubishi Electric,MELSEC iQ-R,R04CPU,2.9.4,PLC,West Wellfield,Medium,J. Lee,2026-02-28
+CV-OT-068,Mitsubishi Electric,MELSEC iQ-R,R04CPU,1.2.3,PLC,North Reservoir,Low,K. Hassan,2026-02-28
+CV-OT-069,Schneider Electric,Modicon M340,BMX P34 CPU,,PLC,East Pump Station,Low,M. Patel,2026-02-28
+CV-OT-070,Rockwell Automation,CompactLogix 5380,5069-L320ER,14.2.1,PLC,West Wellfield,Critical,A. Rahman,2026-08-24
+CV-OT-071,Schneider Electric,EcoStruxure Control Expert,Engineering workstation,3.1,Engineering station,South Booster Station,High,J. Lee,2026-10-19
+CV-OT-072,Siemens,SIMATIC S7-1500,CPU 1515-2 PN,14.2.1,PLC,Cedar Valley WTP,Medium,M. Patel,2026-06-28
+CV-OT-073,Mitsubishi Electric,MELSEC iQ-R,R04CPU,12.0,PLC,West Wellfield,Critical,K. Hassan,2026-10-04
+CV-OT-074,Phoenix Contact,PLCnext Control,AXC F 2152,14.2.1,PLC,South Booster Station,Medium,K. Hassan,2026-06-28
+CV-OT-075,Schneider Electric,EcoStruxure Control Expert,Engineering workstation,12.0,Engineering station,East Pump Station,Critical,S. Khan,2026-02-28
+CV-OT-076,Phoenix Contact,PLCnext Control,AXC F 2152,2.9.4,PLC,Cedar Valley WTP,Critical,J. Lee,2026-06-28
+CV-OT-077,Mitsubishi Electric,MELSEC iQ-R,R04CPU,12.0,PLC,North Reservoir,High,J. Lee,2026-08-24
+CV-OT-078,Emerson,DeltaV,PK Controller,V2.4.7,DCS controller,East Pump Station,Low,K. Hassan,2026-10-19
+CV-OT-079,Rockwell Automation,CompactLogix 5380,5069-L320ER,V2.4.7,PLC,East Pump Station,Low,J. Lee,2026-10-04
+CV-OT-080,Siemens,WinCC Unified,Unified PC Runtime,1.2.3,SCADA/HMI,South Booster Station,High,S. Khan,2026-10-04

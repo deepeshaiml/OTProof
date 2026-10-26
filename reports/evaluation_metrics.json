@@ -1,0 +1,238 @@
+{
+  "evaluation_date": "2026-10-26",
+  "dataset": {
+    "inventory": "Fictional Cedar Valley Water Utility",
+    "assets": 80,
+    "advisories": 3,
+    "labeled_pairs": 14,
+    "full_cross_product_pairs_benchmarked": 240,
+    "labels": {
+      "applicable": 4,
+      "not_applicable": 4,
+      "requires_manual_verification": 6
+    }
+  },
+  "deterministic_applicability": {
+    "applicable_precision": 1.0,
+    "applicable_recall": 1.0,
+    "applicable_false_negative_rate": 0.0,
+    "labeled_case_accuracy": 1.0,
+    "confusion_matrix": {
+      "applicable": {
+        "applicable": 4,
+        "not_applicable": 0,
+        "requires_manual_verification": 0
+      },
+      "not_applicable": {
+        "applicable": 0,
+        "not_applicable": 4,
+        "requires_manual_verification": 0
+      },
+      "requires_manual_verification": {
+        "applicable": 0,
+        "not_applicable": 0,
+        "requires_manual_verification": 6
+      }
+    },
+    "uncertainty": {
+      "manual_review_cases_expected": 6,
+      "manual_review_cases_abstained_correctly": 6,
+      "uncertainty_recall": 1.0,
+      "definitive_cases_not_abstained": 8,
+      "definitive_case_coverage": 1.0
+    },
+    "source_traceability": {
+      "pairs_with_advisory_id_url_and_excerpt": 14,
+      "pairs_total": 14
+    },
+    "timing": {
+      "method": "Single in-process pass using time.perf_counter; includes Python assess calls only.",
+      "full_cross_product_pairs": 240,
+      "elapsed_ms": 1.008,
+      "milliseconds_per_pair": 0.0042,
+      "human_review_time": "Not measured; no operator time study was run."
+    }
+  },
+  "ai_extraction": {
+    "status": "not_run",
+    "reason": "No local Ollama model inference was run; no extraction accuracy claim is made.",
+    "baseline": "CISA HTML/CSAF deterministic normalization is covered by parser unit tests and source-linked fixtures."
+  },
+  "security_and_availability": {
+    "prompt_injection": "Tested: advisory instructions remain untrusted and unsupported extracted values are rejected.",
+    "upload_validation": "Tested: duplicate asset IDs and macro-enabled workbook inputs are rejected.",
+    "feed_outage": "Tested: stale persisted source snapshot is served when refresh fails.",
+    "scope": "Local unit/API tests and in-process timing only; not a penetration test or production performance study."
+  },
+  "cases": [
+    {
+      "asset_id": "CV-HMI-001",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "applicable",
+      "actual": "applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "13.0.0 matches FactoryTalk View SE: version 13.0."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-002",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "not_applicable",
+      "actual": "not_applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "14.0 does not match FactoryTalk View SE: version 13.0."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-003",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "applicable",
+      "actual": "applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "13.0 matches FactoryTalk View SE: version 13.0."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-004",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "not_applicable",
+      "actual": "not_applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "Product mismatch: inventory 'FactoryTalk View Machine Edition' is distinct from advisory product 'FactoryTalk View Site Edition'."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-005",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "requires_manual_verification",
+      "actual": "requires_manual_verification",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "Firmware/software version is missing; a product match alone cannot establish applicability."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-006",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "requires_manual_verification",
+      "actual": "requires_manual_verification",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "Asset model is missing or explicitly marked unknown; confirm the installed equipment identity before relying on this result."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-007",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "requires_manual_verification",
+      "actual": "requires_manual_verification",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "Inventory was last verified 816 days ago; confirm the installed version before relying on this result."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-008",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "requires_manual_verification",
+      "actual": "requires_manual_verification",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "Possible duplicate inventory identity detected; confirm whether this is a separate physical asset."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-HMI-009",
+      "advisory_id": "ICSA-24-226-06",
+      "expected": "requires_manual_verification",
+      "actual": "requires_manual_verification",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "Possible duplicate inventory identity detected; confirm whether this is a separate physical asset."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"
+    },
+    {
+      "asset_id": "CV-OPT-010",
+      "advisory_id": "ICSA-24-256-24",
+      "expected": "applicable",
+      "actual": "applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "5.19 matches All versions prior to V5.20."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-256-24"
+    },
+    {
+      "asset_id": "CV-OPT-011",
+      "advisory_id": "ICSA-24-256-24",
+      "expected": "not_applicable",
+      "actual": "not_applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "5.20 does not match All versions prior to V5.20."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-256-24"
+    },
+    {
+      "asset_id": "CV-APP-012",
+      "advisory_id": "ICSA-24-284-15",
+      "expected": "applicable",
+      "actual": "applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "7.07 matches Versions 7.07 and prior."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-284-15"
+    },
+    {
+      "asset_id": "CV-APP-013",
+      "advisory_id": "ICSA-24-284-15",
+      "expected": "not_applicable",
+      "actual": "not_applicable",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "7.08 does not match Versions 7.07 and prior."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-284-15"
+    },
+    {
+      "asset_id": "CV-OPT-014",
+      "advisory_id": "ICSA-24-256-24",
+      "expected": "requires_manual_verification",
+      "actual": "requires_manual_verification",
+      "correct": true,
+      "source_traceable": true,
+      "reason": [
+        "Version format is not supported by the deterministic parser.",
+        "At least one version constraint could not be interpreted; engineering verification is required."
+      ],
+      "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-256-24"
+    }
+  ]
+}

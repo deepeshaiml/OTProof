@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: otproof
+      POSTGRES_USER: otproof
+      POSTGRES_PASSWORD: ${OTPROOF_DB_PASSWORD:-otproof-local-demo}
+    volumes:
+      - otproof-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U otproof -d otproof"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    restart: unless-stopped
+
+  api:
+    build: .
+    environment:
+      OTPROOF_DATABASE_URL: postgresql+psycopg://otproof:${OTPROOF_DB_PASSWORD:-otproof-local-demo}@db:5432/otproof
+      OTPROOF_DEMO_MODE: ${OTPROOF_DEMO_MODE:-true}
+      OTPROOF_ROLE_TOKENS: ${OTPROOF_ROLE_TOKENS:-}
+      OTPROOF_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  web:
+    build: ./frontend
+    environment:
+      VITE_API_TARGET: http://api:8000
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+
+volumes:
+  otproof-postgres:

@@ -1,0 +1,1 @@
+"""OTProof modular monolith."""

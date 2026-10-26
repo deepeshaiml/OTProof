@@ -1,0 +1,15 @@
+asset_id,advisory_id,expected,label_rationale
+CV-HMI-001,ICSA-24-226-06,applicable,Exact affected product and version (13.0.0 normalizes to 13.0).
+CV-HMI-002,ICSA-24-226-06,not_applicable,"Same product, version outside the advisory's exact 13.0 statement."
+CV-HMI-003,ICSA-24-226-06,applicable,Curated deterministic vendor alias maps Rockwel Automation to Rockwell Automation.
+CV-HMI-004,ICSA-24-226-06,not_applicable,Same vendor but explicitly different FactoryTalk product.
+CV-HMI-005,ICSA-24-226-06,requires_manual_verification,Firmware missing; product identity alone cannot establish applicability.
+CV-HMI-006,ICSA-24-226-06,requires_manual_verification,Model explicitly recorded as Unknown.
+CV-HMI-007,ICSA-24-226-06,requires_manual_verification,Inventory verification date is older than 180 days.
+CV-HMI-008,ICSA-24-226-06,requires_manual_verification,Possible duplicate physical asset with CV-HMI-009.
+CV-HMI-009,ICSA-24-226-06,requires_manual_verification,Possible duplicate physical asset with CV-HMI-008.
+CV-OPT-010,ICSA-24-256-24,applicable,Version 5.19 is below the published 5.20 upper boundary.
+CV-OPT-011,ICSA-24-256-24,not_applicable,Version 5.20 is excluded by the strict prior-to boundary.
+CV-APP-012,ICSA-24-284-15,applicable,Version 7.07 is included by the published and-prior boundary.
+CV-APP-013,ICSA-24-284-15,not_applicable,Version 7.08 is beyond the published 7.07 upper boundary.
+CV-OPT-014,ICSA-24-256-24,requires_manual_verification,Firmware text contains an unsupported hotfix suffix.

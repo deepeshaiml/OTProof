@@ -1,0 +1,50 @@
+[
+  {
+    "external_id": "ICSA-24-226-06",
+    "title": "Rockwell Automation FactoryTalk View Site Edition (Update A)",
+    "source": "CISA ICS",
+    "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06",
+    "vendor": "Rockwell Automation",
+    "product": "FactoryTalk View Site Edition",
+    "cves": ["CVE-2024-7513"],
+    "affected_products": [
+      {"product": "FactoryTalk View SE", "constraints": [{"operator": "eq", "version": "13.0", "raw": "FactoryTalk View SE: version 13.0"}], "source_statement": "FactoryTalk View SE: version 13.0"}
+    ],
+    "description": "CISA reports a vulnerable default file permission condition in FactoryTalk View Site Edition. The public advisory records version 13.0 as affected and directs users to the vendor mitigation information.",
+    "source_excerpt": "FactoryTalk View SE: version 13.0",
+    "published_at": "2024-08-13",
+    "source_updated_at": "2024-08-29"
+  },
+  {
+    "external_id": "ICSA-24-256-24",
+    "title": "Rockwell Automation Pavilion8",
+    "source": "CISA ICS",
+    "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-256-24",
+    "vendor": "Rockwell Automation",
+    "product": "Pavilion8",
+    "cves": ["CVE-2024-7960", "CVE-2024-7961"],
+    "affected_products": [
+      {"product": "Pavilion8", "constraints": [{"operator": "lt", "version": "5.20", "raw": "All versions prior to V5.20"}], "source_statement": "Pavilion8: All versions prior to V5.20"}
+    ],
+    "description": "CISA describes improper privilege management and path traversal issues. The advisory lists Pavilion8 versions prior to V5.20 as affected and points to the vendor's correction guidance.",
+    "source_excerpt": "Pavilion8: All versions prior to V5.20",
+    "published_at": "2024-09-12",
+    "source_updated_at": "2024-09-12"
+  },
+  {
+    "external_id": "ICSA-24-284-15",
+    "title": "Rockwell Automation DataMosaix Private Cloud",
+    "source": "CISA ICS",
+    "source_url": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-284-15",
+    "vendor": "Rockwell Automation",
+    "product": "DataMosaix Private Cloud",
+    "cves": ["CVE-2024-7952"],
+    "affected_products": [
+      {"product": "DataMosaix Private Cloud", "constraints": [{"operator": "lte", "version": "7.07", "raw": "Versions 7.07 and prior"}], "source_statement": "DataMosaix Private Cloud: Versions 7.07 and prior"}
+    ],
+    "description": "CISA reports authorization and information exposure vulnerabilities in DataMosaix Private Cloud. The advisory identifies versions 7.07 and prior as affected.",
+    "source_excerpt": "DataMosaix Private Cloud: Versions 7.07 and prior",
+    "published_at": "2024-10-10",
+    "source_updated_at": "2024-10-10"
+  }
+]
