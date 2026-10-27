@@ -8,7 +8,51 @@
 
 OTProof joins an operator-maintained inventory with public vulnerability advisory records. It answers a narrower question than an OT discovery or vulnerability scanner: “Does this advisory's published vendor, product, model/configuration, and version evidence match this inventory record, and what evidence supports that conclusion?”
 
-The output is a triage result, not proof of exploitability, operational safety, or remediation. A deterministic match becomes a human-reviewed decision only after an authorized engineer records a rationale. A proposed fix becomes verified remediation only after an authorized approver records a verification decision linked to evidence.
+The output is a triage result, not proof of exploitability, operational safety, or remediation. A match becomes a human-reviewed decision only after an authorized reviewer records a rationale. A proposed fix becomes verified remediation only after an authorized approver records a verification decision linked to evidence.
+
+### Plain-language walkthrough
+
+1. An operator uploads an equipment spreadsheet and imports a public security notice.
+2. OTProof compares the maker, product, and software version listed for each asset with the affected product and version in the notice.
+3. It shows its work: which values matched, which source line it used, and why it chose a result.
+4. A person reviews the result. If work is needed, an engineer proposes it, an approver reviews it, and later an approver checks the evidence.
+
+**Example:** the CISA notice for FactoryTalk View Site Edition names version 13.0. The fictional asset `CV-HMI-001` is recorded as version `13.0.0`. OTProof normalizes a known product-name variation and treats the trailing zero as equivalent, so it labels the pair `applicable` while leaving the workflow status `requires_review`. A reviewer still needs to confirm it. Asset `CV-HMI-002` is version `14.0`, outside this notice's exact version statement, so it is `not_applicable` for this advisory. Asset `CV-HMI-005` has no version, so it is `requires_manual_verification`. See [the CISA source record](data/fixtures/SOURCES.md).
+
+### Quick glossary
+
+| Term | Plain meaning in OTProof |
+|---|---|
+| Asset | A device or software record in the operator's inventory. |
+| Advisory | A public security notice that identifies a product weakness and affected versions. |
+| CISA | The U.S. Cybersecurity and Infrastructure Security Agency, which publishes the industrial security notices used here. |
+| CVE | A public identifier for one reported vulnerability. |
+| KEV | CISA's list of vulnerabilities known to have been exploited. Membership informs priority; it does not prove a specific asset is affected. |
+| Candidate finding | A possible link between one asset and one advisory. The finding still needs human review. |
+| Applicable | The recorded vendor, product, and version fit the supported published conditions. This is still a screening result. |
+| Not applicable | The available records rule out this asset for this advisory candidate. It does not mean the asset is free of every vulnerability. |
+| Manual verification | The available information is missing, old, ambiguous, or outside supported rules, so the system deliberately does not guess. |
+| Evidence | A record, reference, or test result used by a person to support a decision. |
+
+### Technical abbreviations
+
+| Term | Plain meaning |
+|---|---|
+| API | A defined way for one software program to request information or an action from another. |
+| ICS | Industrial control systems: computers and controllers used to monitor or operate industrial processes. |
+| NVD | The National Vulnerability Database, maintained by NIST, which publishes machine-readable vulnerability records. |
+| CPE | A standardized way to name a computer product in vulnerability databases. |
+| CSAF | Common Security Advisory Framework, a structured format for sharing security advisories. |
+| LLM | Large language model; the kind of generative AI that can summarize or extract text. |
+| RBAC | Role-based access control: permissions depend on whether the user is an engineer, reviewer, or approver. |
+| SSO | Single sign-on: using an organization's existing login to access the service. |
+| WORM | Write once, read many storage: a system designed to prevent stored records from being changed after they are written. |
+| ETag / Last-Modified | Web-server labels that tell a client whether a downloaded source has changed. |
+| TTL | Time to live: how long OTProof waits before refreshing a saved source copy. |
+
+In implementation sections, **deterministic** means the same inputs follow the same explicit rules and produce the same output. **Abstain** means the system refuses to guess and sends the case for human review.
+
+For coding assistants, see [docs/AI_AGENT_GUIDE.md](docs/AI_AGENT_GUIDE.md), which includes a safe example output and repository map.
 
 NIST SP 800-82 Rev. 3 is the published final OT security guide used as design context. NIST's publication list reports Rev. 4 as an initial public draft dated 2026-09-21; this MVP does not present that draft as final. Rev. 3 highlights accurate vendor, model, firmware/software, location, criticality, and accountable-role inventory data as important for OT risk management. [NIST SP 800-82 Rev. 3](https://csrc.nist.gov/pubs/sp/800/82/r3/final) · [NIST OT publication index](https://csrc.nist.gov/Projects/operational-technology-security/publications)
 
@@ -128,7 +172,7 @@ The API schema is available at `/docs` when the service is running locally. Writ
 
 ## 10. Evaluation snapshot
 
-The fixed 14-case synthetic label set produced 100% precision and recall for applicable labels, 0 false negatives, 6/6 expected manual-review abstentions, and 14/14 source-traceable output records. This is an in-sample fixture result with four positive examples, not field accuracy. One in-process 240-pair benchmark measured approximately 1.05 ms total on this development environment; it includes matcher function execution only. Human review time and end-to-end latency were not measured. The local LLM was not run. See [OTProof_Evaluation_Report.pdf](OTProof_Evaluation_Report.pdf) and `reports/evaluation_metrics.json`.
+The fixed 14-case synthetic label set produced 100% precision and recall for applicable labels, 0 false negatives, 6/6 expected manual-review abstentions, and 14/14 source-traceable output records. In plain terms, all 14 prepared examples got their expected result, including all four affected examples and all six cases that should go to review. This is an in-sample fixture result with only four affected examples, not field accuracy. One in-process 240-pair benchmark measured approximately 1.01 ms total on this development environment; it includes matcher function execution only. Human review time and end-to-end latency were not measured. The local LLM was not run. See [OTProof_Evaluation_Report.pdf](OTProof_Evaluation_Report.pdf) and `reports/evaluation_metrics.json`.
 
 ## 11. Primary references
 

@@ -2,6 +2,12 @@
 
 Accessed 2026-10-26. Product descriptions below summarize vendors' current public pages and are not independent comparative tests.
 
+## Short version for non-specialists
+
+Industrial operators keep lists of controllers, software, and other equipment. Public security notices describe which products and versions may be affected. OTProof compares those records and saves the source and human decision. A public vulnerability ID or a match is a reason to review a record; it is not proof that a specific plant asset is exposed or that a change should be made. The [NIST OT guide](https://csrc.nist.gov/pubs/sp/800/82/r3/final) supports maintaining accurate asset details, while the MVP avoids connecting to or scanning equipment.
+
+Terms used below: **OT** means operational technology (equipment and computers that monitor or control physical processes); **CVE** is a public vulnerability identifier; **KEV** is CISA's list of vulnerabilities known to be exploited; **GRC** means governance, risk, and compliance. A short product example is in [the AI and human-agent guide](AI_AGENT_GUIDE.md).
+
 ## OT and public-source rationale
 
 - [NIST SP 800-82 Rev. 3](https://csrc.nist.gov/pubs/sp/800/82/r3/final) is the published final guide (2023-09-28). NIST's [OT publication list](https://csrc.nist.gov/Projects/operational-technology-security/publications) lists Rev. 4 as a draft released 2026-09-21. The product and design documents therefore cite Rev. 3 as the final guide and label Rev. 4 draft status accurately.

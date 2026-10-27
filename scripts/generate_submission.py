@@ -48,7 +48,7 @@ WHITE = "FFFFFF"
 IDEA_PAGES = [
     {
         "title": "OTProof",
-        "deck": "AI-powered industrial vulnerability applicability and remediation assurance",
+        "deck": "Check which public security notices may affect industrial equipment, then keep the human review and evidence together.",
         "cover": True,
         "sections": [
             {
@@ -64,103 +64,123 @@ IDEA_PAGES = [
         "callout": "Eureka Hackathon · Product concept and working MVP · 26 October 2026",
     },
     {
-        "title": "The problem sits between the inventory and the advisory",
-        "deck": "A published CVE is not enough to know which operational asset needs engineering attention.",
+        "title": "OTProof in plain language",
+        "deck": "It connects an equipment list to public security notices. It points people to records worth checking; it does not touch equipment or make operational decisions.",
+        "sections": [
+            {
+                "heading": "A simple example",
+                "body": "A real CISA notice says FactoryTalk View Site Edition version 13.0 is affected. In our fictional water utility, asset CV-HMI-001 is version 13.0.0, so OTProof shows a possible match and links the notice. CV-HMI-002 is version 14.0, which is outside that notice's version statement. CV-HMI-005 has no recorded version, so OTProof asks an engineer to check. None of these results means equipment was changed or fixed.",
+            },
+            {
+                "heading": "People make the important calls",
+                "body": "A reviewer decides whether the notice fits the asset and records why. An engineer proposes any work and its timing. An approver accepts or rejects that plan. After work, the team adds evidence and an approver verifies it. AI can help read the notice, but it cannot make those decisions.",
+            },
+            {
+                "heading": "Quick translations",
+                "body": "OT means operational technology: computers and controllers that monitor or run physical processes such as water pumps. A vulnerability notice describes a software or product weakness. A CVE is the public ID assigned to a specific vulnerability. Evidence is a record that supports a human decision, such as a change reference or test result.",
+            },
+        ],
+        "callout": "OTProof is a careful checklist and record keeper: it highlights what may need attention, while authorized people decide what to do.",
+        "sources": ["Worked example source: CISA ICSA-24-226-06 · https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06"],
+    },
+    {
+        "title": "The inventory and the security notice speak different languages",
+        "deck": "A public vulnerability notice alone does not say which equipment at a particular site needs engineering attention.",
         "sections": [
             {
                 "heading": "Three records that rarely line up cleanly",
-                "body": "Operators track asset names, models, software/firmware, site, criticality, and owners across maintenance records and spreadsheets. Advisory publishers use product families, version ranges, configuration conditions, and vendor terminology. Security and engineering teams reconcile them under time pressure.",
+                "body": "Operators track equipment names, models, software versions, locations, importance, and owners in spreadsheets and maintenance systems. Security notices may use different product names and list affected versions in a different format. Security and engineering teams have to compare the records and keep track of their reasoning.",
             },
             {
                 "heading": "False certainty has a cost",
-                "body": "A superficial product-name match can create noise; a missing or stale version can hide a relevant case. OT teams must also assess process impact, approved change windows, vendor support, and operational safety before acting.",
+                "body": "A loose name match can create false alarms. Missing or old version details can hide a real concern. Before changing industrial equipment, the team must consider process impact, vendor guidance, maintenance schedules, and safety.",
             },
             {
                 "heading": "Why now",
-                "body": "NIST SP 800-82 Rev. 3 identifies accurate inventory details such as vendor, model, software/firmware version, location, and roles as useful to OT risk management. It also recognizes that active collection methods may affect OT and need careful consideration. OTProof begins with an operator-supplied inventory and stays out of the control network.",
+                "body": "NIST's final OT security guide recommends keeping accurate records of equipment, vendors, software versions, locations, and responsible roles. OTProof starts from a file the operator provides and does not connect to industrial equipment.",
                 "source": "NIST SP 800-82 Rev. 3 final (2023-09-28): https://csrc.nist.gov/pubs/sp/800/82/r3/final",
             },
         ],
-        "callout": "The product produces a source-backed triage candidate, not a safety, exploitability, or remediation verdict.",
+        "callout": "The product shows a possible match with its source. It does not decide whether a change is safe or whether work is complete.",
     },
     {
-        "title": "A single workflow from source to verified evidence",
+        "title": "From security notice to reviewed evidence",
         "deck": "Every finding preserves the records and decisions needed to explain what happened.",
         "sections": [
             {
                 "heading": "1 · Load and validate inventory",
-                "body": "Import a CSV or XLSX file with asset identity, vendor, product/model, version, type, site, criticality, owner, and last verification date. Reject duplicate identifiers, oversized uploads, and macro-enabled workbooks.",
+                "body": "Load an inventory spreadsheet with each asset's ID, maker, product/model, software version, type, site, importance, owner, and last check date. OTProof checks required fields and rejects duplicate IDs, very large uploads, and macro-enabled workbooks.",
             },
             {
                 "heading": "2 · Import approved advisory data",
-                "body": "Fetch CISA ICS RSS/advisory/CSAF, CISA KEV JSON, NVD CVE API 2.0, or a bulletin on an approved vendor HTTPS domain. Cache payloads and preserve source URLs and timestamps.",
+                "body": "Load public security notices from CISA, the CISA list of known exploited vulnerabilities, NIST's vulnerability database, or an approved vendor website. OTProof saves when and where each record came from so the team can check it later.",
             },
             {
                 "heading": "3–6 · Compare, review, and assure",
-                "body": "The deterministic matcher returns applicable, not applicable, or manual verification. An engineer records the applicability decision and rationale; an approver accepts or rejects a proposed ticket; evidence is attached and separately verified by an approver; JSON/PDF reports retain sources and audit history.",
+                "body": "The comparison returns one of three results: likely affected, does not match this notice, or needs a human check. A reviewer records the decision and reason. An engineer proposes work, an approver reviews it, and later an approver checks the supporting evidence. Reports preserve the sources and action history.",
             },
         ],
-        "callout": "A ticket or generated narrative cannot mark a finding remediated. Only an approver verification tied to evidence can.",
+        "callout": "A proposed fix or AI-written summary cannot count as proof that work is complete. An authorized person must check evidence.",
     },
     {
-        "title": "A modular, offline-capable architecture",
+        "title": "How the application is built",
         "deck": "One maintainable service keeps source ingestion, comparison, workflow, and evidence close together.",
         "sections": [
             {
                 "heading": "Built for the demo and a controlled pilot",
-                "body": "React + TypeScript dashboard → FastAPI/Pydantic API → SQLAlchemy and PostgreSQL. SQLite supports a quick local run. Alembic manages schema changes. ReportLab exports assurance reports. Docker Compose packages the database, API, and frontend.",
+                "body": "A web dashboard sends requests to one service that validates data, applies matching rules, and records decisions in a database. The implementation uses React/TypeScript, FastAPI/Pydantic, and PostgreSQL; SQLite supports a quick local demo. ReportLab creates PDF reports, and Docker Compose packages the components.",
             },
             {
                 "heading": "Public sources only",
-                "body": "The ingestion service uses documented CISA RSS/JSON, NVD CVE API 2.0, CISA-linked CSAF documents, and an allowlist of vendor bulletin domains. Conditional cache headers, a configurable TTL, bounded retries, and stale-copy fallback support outages.",
+                "body": "The source service uses documented public CISA and NIST feeds, CISA-linked advisory files, and approved vendor websites. It avoids unnecessary repeat downloads, retries temporary rate limits, and can use a saved older copy when a source is unavailable.",
             },
             {
-                "heading": "Explicit trust boundaries",
-                "body": "There is no OT interface, protocol client, scanner, exploit capability, or control action. The optional local LLM adapter receives advisory text only and cannot write applicability decisions or workflow status.",
+                "heading": "What the system can and cannot do",
+                "body": "There is no connection to industrial devices, no network scanner, no exploit tool, and no way to change equipment. The optional local AI helper can read notice text and draft fields, but it cannot decide whether a vulnerability applies or mark work complete.",
             },
         ],
-        "callout": "Deployment for real operators requires managed identity, secret rotation, allowlisted egress, backup/restore, and independent security review.",
+        "callout": "Before a real operator uses it: add company login, protect and rotate secrets, limit internet access, test backup and restore, and complete an independent security review.",
     },
     {
-        "title": "Deterministic matching earns each conclusion",
-        "deck": "Product identity and version evidence are more useful than an unexplained similarity score.",
+        "title": "The matching rules show their work",
+        "deck": "OTProof compares product identity and published version limits. If it cannot tell, it asks a person to check.",
         "sections": [
             {
                 "heading": "Supported comparisons",
-                "body": "A curated alias map normalizes a small set of known vendor/product variants. Exact normalized product identity is followed by conservative dotted-numeric version comparison against published equality or inclusive/exclusive bounds. Constraints in one NVD CPE match are conjunctive; alternatives remain separate candidate products.",
+                "body": "A small reviewed list handles known spelling variations. The product name must match, then the installed version is compared with the affected version or range stated by the publisher. Every required condition must match; separate affected products are checked as separate possibilities.",
             },
             {
                 "heading": "Abstain when evidence is incomplete",
-                "body": "Missing firmware, unknown model, possible duplicate asset, inventory older than 180 days, unsupported suffix/version syntax, ambiguous product identity, and compound or negated NVD configurations require an engineering review. Semantic similarity never decides applicability.",
+                "body": "Missing software version, unknown model, a possible duplicate asset, inventory older than 180 days, unfamiliar version format, unclear product identity, or complicated source conditions all require an engineering review. A similar-sounding name is never enough to call a vulnerability applicable.",
             },
             {
                 "heading": "AI assists with reading, not deciding",
-                "body": "An optional local Ollama-compatible model can draft structured product/version/CVE extraction, summaries, uncertainty explanations, and review suggestions. Pydantic validates the response and extracted identifiers/quotes are checked against the source text. The LLM is not used by the matcher or state machine.",
+                "body": "An optional AI model running on the user's computer can suggest product, version, vulnerability ID, mitigation, and summary fields. Required fields are checked and quoted details are compared with the original notice. The AI suggestion does not affect the matching result or workflow status.",
             },
         ],
-        "callout": "Default model name: Qwen2.5 7B Instruct via Ollama (Apache-2.0 model repository, MIT runtime). No inference was run for this MVP evaluation.",
+        "callout": "No AI model was run during evaluation. Its accuracy has not been measured; a person must check every suggestion.",
     },
     {
-        "title": "Human decisions create the assurance record",
+        "title": "People review work and verify evidence",
         "deck": "Separate technical applicability, remediation planning, approval, and evidence verification.",
         "sections": [
             {
                 "heading": "Role-gated lifecycle",
-                "body": "A reviewer can run analysis and record an applicable/not-applicable decision with a rationale. An engineer can propose a mitigation, owner, and due date. An approver independently accepts/rejects the ticket. Evidence is then attached with a hash and reference; an approver verifies a selected record and supplies a rationale.",
+                "body": "The reviewer checks whether the notice applies and records the reason. The engineer proposes a safe action, an owner, and a due date. A different person approves or rejects the plan. After the work, the team adds a change or test record; an approver checks it and records why it is sufficient.",
             },
             {
                 "heading": "Audit and exports",
-                "body": "Application actions create append-only audit events with actor, role, timestamp, entity, and details. The report includes source publication/update dates, matching reasons, human decisions, remediation state, evidence references/hashes, and audit history.",
+                "body": "The system records who did what and when. The report includes the source publication and update dates, matching reasons, human decisions, work status, evidence references, and action history. Evidence records include a digital fingerprint so later changes can be detected when compared with the original.",
             },
             {
                 "heading": "What the MVP does not claim",
-                "body": "Demo bearer tokens are intentionally visible and unsafe for production. The audit database is not WORM or cryptographically immutable. Evidence is text/metadata rather than binary attachments. No certification, compliance determination, or verified operational-risk reduction is claimed.",
+                "body": "The demo passwords are visible and unsafe for real use. A database administrator could change stored audit records. Evidence is a text record or reference, not an uploaded file. OTProof does not certify compliance or prove that operational risk was reduced.",
             },
         ],
-        "callout": "The demo evidence is simulated. Verification changes application workflow status; it does not attest to a real plant modification.",
+        "callout": "Demo evidence is fictional. Marking it verified changes the demo record only; it does not prove a real plant change occurred.",
     },
     {
-        "title": "Commercial opportunity: focused assurance around OT data",
+        "title": "Potential customers and business model",
         "deck": "Potential users span operators, contractors, and service providers with different inventory systems.",
         "sections": [
             {
@@ -169,11 +189,11 @@ IDEA_PAGES = [
             },
             {
                 "heading": "Competitive landscape",
-                "body": "Claroty, Tenable, and Nozomi publicly describe broad OT asset visibility, vulnerability/exposure management, monitoring, and remediation workflows. ServiceNow and other GRC/IRM suites manage enterprise risk, controls, audit, and work processes. OTProof's possible wedge is a local, source-linked and conservative review workflow that may complement existing products; this is a hypothesis, not a demonstrated product advantage. Better evidence handover may support audit preparation and help operators review exposure sooner, but neither compliance outcomes nor risk reduction have been measured.",
+                "body": "Claroty, Tenable, and Nozomi publicly describe broad industrial equipment visibility, vulnerability management, monitoring, and remediation workflows. ServiceNow and similar risk and compliance systems manage controls, audits, and work records. OTProof may offer a local, source-linked review workflow that complements them; this is a hypothesis, not a proven advantage. Better evidence handover may help audit preparation, but compliance outcomes and risk reduction have not been measured.",
             },
             {
                 "heading": "Illustrative annual revenue model",
-                "body": "Assume 3 licensed sites per customer at $36,000/site/year; $25,000 onboarding per new customer; 78% recurring software gross margin; and 40% onboarding-services gross margin. The scenarios below are arithmetic examples only—not bookings, market sizing, or a forecast.",
+                "body": "For illustration only, assume 3 sites per customer at $36,000 per site each year, $25,000 one-time setup for each new customer, and assumed profit margins of 78% on software and 40% on setup services. These are arithmetic examples, not sales, market size, or a forecast.",
                 "table": [
                     ["Customers", "Sites", "Recurring ARR", "Year-1 revenue", "Year-1 gross profit"],
                     ["1", "3", "$108k", "$133k", "$94k"],
@@ -183,7 +203,7 @@ IDEA_PAGES = [
                 ],
             },
         ],
-        "callout": "Other revenue paths: enterprise license, integrations, deployment, and ongoing assurance services. Price and margin assumptions need buyer interviews and cost validation.",
+        "callout": "ARR means yearly subscription income. Gross margin is the share left after direct delivery costs; gross profit is that amount in dollars. Prices and margins need buyer interviews and cost validation.",
     },
     {
         "title": "Measured MVP, open questions, and the next proof points",
@@ -191,18 +211,18 @@ IDEA_PAGES = [
         "sections": [
             {
                 "heading": "Fixture baseline (26 Oct 2026)",
-                "body": "14 labeled asset/advisory pairs: 4 applicable, 4 not applicable, and 6 expected manual verification. The deterministic matcher produced 14/14 expected labels, 100% precision/recall on four positive fixture examples, 0 labeled false negatives, and 6/6 expected abstentions. Every labeled result retained source ID, URL, and excerpt.",
+                "body": "The test set has 14 hand-labeled asset/notice examples: 4 likely affected, 4 outside the published affected details, and 6 that should go to human review. The matcher returned the expected result on all 14. It found all 4 affected examples and missed none in this small test set. It also sent all 6 uncertain examples to review. Each result kept the source ID, link, and relevant source text.",
             },
             {
                 "heading": "Performance and security checks",
-                "body": "One in-process pass over 80 assets × 3 advisories (240 pairs) measured about 1.05 ms on the development machine; this excludes network, database, and human review. Tests cover stale-cache fallback, duplicate IDs, macro-enabled workbook rejection, source quote validation, prompt injection as untrusted data, role authorization, and remediation evidence verification.",
+                "body": "A single local software-only run compared 80 fictional assets with 3 notices (240 comparisons) in about 1.05 ms. This does not include internet, database, or human review time. Tests cover unavailable sources, duplicate IDs, unsafe spreadsheets, unsupported AI claims, role permissions, and evidence review.",
             },
             {
                 "heading": "Roadmap and pilot ask",
-                "body": "Next: (1) invite 3–5 operator design partners, (2) label a diverse, source-reviewed multi-vendor dataset, (3) run blinded engineering adjudication and measure false negatives/abstentions, (4) add SSO, durable audit export, and CMMS/GRC connectors, (5) conduct a threat model and deployment review. Ask: a water/energy operator and OT engineers to validate the workflow, data fields, and trust boundaries.",
+                "body": "Next, invite 3–5 operators and service providers to test the workflow. Ask engineers to label examples before seeing OTProof's results, then compare disagreements. Measure missed cases, human-review cases, time per review, and setup effort across several vendors. Add company login, protected audit export, and maintenance/risk-system connections only after users confirm the need. Ask a water or energy operator and its engineers to join this evaluation.",
             },
         ],
-        "callout": "Human review time, AI extraction accuracy, field accuracy, cost savings, and production performance remain unmeasured.",
+        "callout": "Not measured yet: operator accuracy, human review time, AI quality, savings, or production performance.",
         "sources": [
             "NIST SP 800-82 Rev. 3 final: https://csrc.nist.gov/pubs/sp/800/82/r3/final",
             "CISA advisory fixture provenance: data/fixtures/SOURCES.md",
@@ -215,22 +235,22 @@ IDEA_PAGES = [
 SLIDES = [
     {
         "title": "OTProof",
-        "subtitle": "Evidence-first vulnerability applicability and remediation assurance for industrial assets",
+        "subtitle": "Check which public security notices may affect industrial equipment, then keep the human review and evidence together.",
         "bullets": [
-            "Reconcile an operator inventory with public ICS advisories",
-            "Show exact product/version evidence and uncertainty",
-            "Keep engineering and approval decisions human-owned",
+            "Compare the equipment list with public industrial security notices",
+            "Show what matched, what did not, and what is unknown",
+            "People decide and approve any work",
         ],
         "metric": "READ-ONLY",
-        "metric_label": "No OT interaction in this MVP",
+        "metric_label": "No contact with industrial equipment",
         "right_items": ["80 fictional assets", "3 real CISA advisories", "Offline-ready demo"],
         "kind": "cover",
         "source": "Eureka Hackathon · MVP snapshot 26 Oct 2026",
-        "notes": "Introduce OTProof as a small, evidence-first assurance workflow for vulnerability applicability and remediation review. It starts with an operator-provided CSV or spreadsheet and compares it with approved public advisory information. Deterministic rules make the first applicability classification; a person handles uncertainty, remediation approval, and evidence verification. The demonstration dataset is fictional and the advisory records are real public CISA examples. The application never scans, exploits, or modifies industrial equipment. The aim of this pitch is to validate whether operators need a focused workflow alongside their existing OT security and GRC systems.",
+        "notes": "Introduce OTProof as a record-checking tool for industrial security work. An operator provides an equipment spreadsheet, and OTProof compares it with public security notices. The screen shows what appears to match, which source it used, and when a person should check missing or unclear details. Engineers and approvers make the consequential decisions. The equipment in the demo is fictional; the CISA notices are real. The application never scans, exploits, queries, or changes industrial equipment. This pitch asks whether operators need a focused review tool alongside the security and audit products they already use.",
     },
     {
-        "title": "The review gap lives between two records",
-        "subtitle": "An advisory lists products and versions. An operator owns assets, maintenance context, and change decisions.",
+        "title": "Why matching is harder than it looks",
+        "subtitle": "The security notice and the equipment list often describe the same product in different ways.",
         "bullets": [
             "Inventory identifiers and advisory product language often differ",
             "A version match can be exact, excluded, or impossible to confirm",
@@ -240,11 +260,11 @@ SLIDES = [
         "metric_label": "Inventory · advisory · remediation evidence",
         "right_items": ["Asset inventory", "Public advisory", "Engineering record"],
         "source": "NIST SP 800-82 Rev. 3 final · https://csrc.nist.gov/pubs/sp/800/82/r3/final",
-        "notes": "The workflow problem is not merely a lack of vulnerability data. Teams need to connect a specific installed asset to a specific published affected product/version and keep the basis for their decision. Inventory records may have old timestamps, vendor spelling differences, or missing firmware. Advisories may use a different product family name or a nuanced version boundary. A loose name match can create noise, while a missing version can block a safe conclusion. NIST SP 800-82 Revision 3, the current published final guide used here, emphasizes accurate inventory details and careful evaluation of automated OT collection methods. OTProof begins from records operators already have.",
+        "notes": "The challenge is connecting one installed asset to one public notice and keeping the reason for the decision. The equipment list may be old, spell the maker differently, or omit the software version. The notice may describe the same product family with different wording. A loose name match creates false alarms; missing version details make a confident conclusion impossible. NIST, the U.S. National Institute of Standards and Technology, recommends accurate equipment records in its published OT security guide, Revision 3. OTProof starts from the operator's existing files and leaves the industrial network alone.",
     },
     {
-        "title": "Critical infrastructure needs cautious handling",
-        "subtitle": "Water, energy, oil and gas, and industrial operators balance security with continuity, safety, and maintenance constraints.",
+        "title": "Essential services need careful decisions",
+        "subtitle": "Industrial control technology helps run water, energy, and other services, so changes need engineering review.",
         "bullets": [
             "A vulnerability label alone does not prove local applicability",
             "A patch suggestion is not an approved operational change",
@@ -252,85 +272,85 @@ SLIDES = [
         ],
         "metric": "NO DEVICE",
         "metric_label": "Discovery or configuration change",
-        "right_items": ["File-based inventory", "Public source egress", "Human-led review"],
+        "right_items": ["Operator's inventory file", "Approved public websites", "Human-led review"],
         "source": "NIST SP 800-82 Rev. 3 final; Rev. 4 remains an initial public draft as of 26 Oct 2026.",
-        "notes": "OT environments have availability, reliability, and safety requirements that shape how security work is performed. OTProof is deliberately not an asset discovery product and does not ask an operator to scan or modify controllers, gateways, HMIs, or supervisory systems. The user supplies the inventory, and the service retrieves public advisory information. NIST lists Revision 3 as final and Revision 4 as a draft from September 2026, so these materials cite Revision 3 as final. The product's role is narrower: produce an explainable candidate and leave technical applicability, change planning, approval, and verification with authorized staff.",
+        "notes": "Water, power, and other essential services depend on equipment that must keep running reliably and safely. A public notice does not automatically mean a local device should be patched. OTProof does not discover equipment, send network queries, or change controllers, gateway computers, operator screens, or supervisory systems. The operator supplies the equipment list, and OTProof retrieves public notices. NIST's Revision 3 is the published final OT guide. Revision 4 is a draft, so this project does not describe it as final. Authorized staff decide what applies, what work is safe, and whether evidence is sufficient.",
     },
     {
-        "title": "One auditable workflow from import to assurance",
-        "subtitle": "A repeatable sequence connects a source statement to an engineering decision and evidence record.",
+        "title": "From import to report: six clear steps",
+        "subtitle": "Follow the notice, compare the equipment, record the people’s decisions, and save the evidence.",
         "bullets": [
-            "Validate inventory and import approved public advisory data",
-            "Compare vendor, product, configuration, and version constraints",
-            "Record review, ticket approval, evidence, and verification",
+            "Check the equipment file and load public security notices",
+            "Compare maker, product, model, and installed version",
+            "Record decisions, work approval, and supporting evidence",
         ],
         "metric": "6 STEPS",
         "metric_label": "Import → compare → review → plan → evidence → verify",
-        "right_items": ["Source linked", "Role gated", "Exportable"],
+        "right_items": ["Sources shown", "People approve", "Reports downloadable"],
         "kind": "workflow",
         "source": "End-to-end journey is implemented in the MVP dashboard and API.",
-        "notes": "Walk through the six steps. First, load a CSV or XLSX inventory and validate required fields, identifiers, and workbook type. Second, import CISA ICS or KEV data, an NVD CVE record, or an approved vendor bulletin; offline fixtures remain available. Third, run deterministic matching and inspect every source and inventory field. Fourth, an engineer or reviewer records an applicability decision and rationale. Fifth, a remediation action can be proposed and approved by a separate approver. Sixth, evidence is attached and verified against a selected record. The assurance report exports that chain. A generated summary or an attached evidence note cannot independently close a finding.",
+        "notes": "Walk through the six steps. First, load an equipment spreadsheet and check its required fields. Second, load a public notice from CISA or NIST, or an approved vendor website; the fixed demo examples work without internet access. Third, compare maker, product, model, and version details and open the source link. Fourth, a reviewer records whether the notice fits and explains why. Fifth, an engineer proposes a work plan and a separate approver accepts or rejects it. Sixth, the team attaches a change or test record and an approver checks it. The report saves this history. A generated summary or attached note cannot close the finding by itself.",
     },
     {
         "title": "Demo: three assets, three distinct outcomes",
         "subtitle": "A CISA FactoryTalk View advisory exposes why version and inventory quality matter.",
         "bullets": [
-            "FactoryTalk View SE 13.0.0 → applicable candidate",
+            "FactoryTalk View SE 13.0.0 → possible match",
             "FactoryTalk View SE 14.0 → outside the exact affected version",
             "Same product with missing firmware → engineering review",
         ],
         "metric": "ICSA-24-226-06",
-        "metric_label": "CISA · published 13 Aug 2024 · updated 29 Aug 2024",
+        "metric_label": "CISA notice · published 13 Aug 2024 · updated 29 Aug 2024",
         "right_items": ["CVE-2024-7513", "Source statement: version 13.0", "Source URL retained"],
         "source": "https://www.cisa.gov/news-events/ics-advisories/icsa-24-226-06",
-        "notes": "Use the fixture example to show the three labels. CV-HMI-001 records FactoryTalk View Site Edition version 13.0.0. The matcher normalizes a curated product alias and numeric trailing zero, then compares the installed version to CISA's affected statement for FactoryTalk View SE version 13.0. CV-HMI-002 uses the same product at 14.0, which is outside the exact version statement. CV-HMI-005 has no firmware version; the correct result is manual verification because product identity alone is insufficient. The advisory is genuine and its CISA URL and publication/update dates are included. The utility and asset records are fictional.",
+        "notes": "Use the three fictional assets to explain the outcomes. CV-HMI-001 lists FactoryTalk View Site Edition version 13.0.0. The CISA notice names version 13.0, so OTProof shows a possible match and links the original notice. CV-HMI-002 lists version 14.0, which is outside that exact statement. CV-HMI-005 does not list a version, so OTProof asks an engineer to check instead of guessing. The notice is real, and its publication and update dates are retained. The utility, assets, and work records are fictional. A possible match is a screening result, not an engineering decision or a claim that a device is vulnerable in practice.",
     },
     {
-        "title": "Deterministic matching earns each conclusion",
-        "subtitle": "A small ruleset handles explicit source evidence; unsupported cases abstain.",
+        "title": "No unsupported guesses: show the matching rules",
+        "subtitle": "Compare exact product and version details. If the records are incomplete, ask a person to check.",
         "bullets": [
-            "Normalize only curated vendor and product aliases",
-            "Apply explicit equality and inclusive/exclusive version bounds",
-            "Route ambiguity, stale data, duplicates, and unknown syntax to review",
+            "Correct only known spelling variations",
+            "Compare the installed version with the notice’s affected version or range",
+            "Send missing, old, duplicate, or unclear records to human review",
         ],
         "metric": "3 OUTCOMES",
         "metric_label": "Applicable · not applicable · manual verification",
-        "right_items": ["Exact identity", "Published constraint", "Traceable rationale"],
+        "right_items": ["Product names match", "Version fits the notice", "Reason and source link shown"],
         "source": "Matcher implementation: backend/app/services/matching.py",
-        "notes": "The matcher is intentionally conservative. It normalizes case and punctuation and applies a short, curated alias map. It does not use Sentence Transformers or an embedding score as a vulnerability verdict. Numeric dotted versions are compared against supported operators. Constraints within one CPE match are conjunctive; alternate product candidates remain alternatives. Missing firmware, a stale inventory verification date, unknown model, duplicate identity, unsupported suffixes, or compound NVD configuration logic produce a manual-review outcome. Every result keeps the inventory values, advisory identifier, source URL, excerpt, and explanation. Product and model catalogs still need wider field validation.",
+        "notes": "The matching rules are designed to avoid guesses. OTProof recognizes only a small, reviewed list of spelling variations. It then compares the inventory version with the version or range printed in the notice. It does not decide from a similar-sounding product name. If the version is missing, the inventory is old, two records may describe the same device, or the source uses a format the software cannot read, the result goes to an engineer. Every result keeps the values and source text used to reach it. The current product and model list is narrow and needs testing with more operators and equipment families.",
     },
     {
-        "title": "AI reads advisory text; people decide",
-        "subtitle": "The local model is an optional extraction assistant behind schema and source checks.",
+        "title": "AI can read; people make the decisions",
+        "subtitle": "An optional local AI helper suggests details from a notice. It cannot decide whether equipment is affected.",
         "bullets": [
-            "Draft structured vendor, product, CVE, version, and mitigation fields",
-            "Treat embedded advisory instructions as untrusted text",
-            "Keep model output out of applicability and remediation state",
+            "Suggest product, version, vulnerability ID, and mitigation details",
+            "Check suggested quotes and details against the original notice",
+            "Never let AI approve work or mark equipment fixed",
         ],
         "metric": "OPTIONAL",
-        "metric_label": "Local Ollama adapter · no inference run in evaluation",
-        "right_items": ["Pydantic schema", "Verbatim source evidence", "Suggestion only"],
-        "source": "Optional Qwen2.5 7B Instruct model; Apache-2.0 model repo. No weights included.",
-        "notes": "AI is a small, optional component, not the core decision maker. A local Ollama-compatible server can propose structured extraction and a plain-language summary. The prompt identifies advisory content as untrusted and says to ignore embedded commands. Pydantic validates output shape, and cited identifiers, product/version/mitigation strings, and quotes are checked against the source. These checks reduce unsupported output but cannot prove summary completeness or correctness. The application labels the result suggestion-only. The model was not installed or run during this MVP validation, and no extraction accuracy benefit is claimed. A future evaluation should compare blinded model outputs against engineer-labeled source excerpts and deterministic extraction baselines.",
+        "metric_label": "Optional local AI · not run in evaluation",
+        "right_items": ["Required fields checked", "Source details compared", "Suggestion only"],
+        "source": "Optional local model; no model weights included and no inference run in evaluation.",
+        "notes": "AI is optional and helps with reading, not deciding. A local model can suggest product names, versions, vulnerability IDs, mitigations, and a short summary from a notice. The output has required fields, and quoted details are checked against the original text. This catches some unsupported claims, but it cannot prove that a summary is complete or correct. The application labels AI text as a suggestion and never lets it set applicability, approve a work plan, or close a finding. No model was installed or run for this evaluation, so AI quality has not been measured. A later test should compare its suggestions with source excerpts labeled by engineers.",
     },
     {
-        "title": "A compact architecture keeps evidence close to the decision",
-        "subtitle": "A modular monolith is easier to inspect and package for a controlled first pilot.",
+        "title": "How the software is put together",
+        "subtitle": "A web page, one service, and a database keep the process simple to inspect and run.",
         "bullets": [
-            "React + TypeScript dashboard, FastAPI + Pydantic service",
-            "PostgreSQL deployment; SQLite for local offline demonstration",
-            "Cached public sources, deterministic matcher, audit and report services",
+            "Web dashboard and a service that checks and compares records",
+            "Database for decisions; PDF and JSON reports for handoff",
+            "Optional AI helper runs locally and only drafts suggestions",
         ],
         "metric": "NO OT PATH",
-        "metric_label": "The API has no device protocol client or scanner",
+        "metric_label": "The service has no device scanner or connection",
         "right_items": ["Inventory / sources", "API + database", "Review / reports"],
         "kind": "architecture",
         "source": "Full technical design: OTProof_Technical_Design.md",
-        "notes": "Describe the technology choices as an implementation, not a production certification. The UI is React and TypeScript. FastAPI validates routes and Pydantic schemas. SQLAlchemy sits over PostgreSQL for deployment and SQLite for quick local use. Alembic tracks schema migrations. Source adapters store cached payloads and metadata; the matcher produces traceable findings; workflow services record decisions; ReportLab exports PDF. Docker Compose packages the services, although a Docker daemon was unavailable in the build environment, so startup was not verified. The optional LLM calls a local inference endpoint. No service connects to an OT address range or equipment protocol.",
+        "notes": "Explain the drawing from left to right. The operator supplies an equipment spreadsheet, and the application retrieves public notices. One service checks the inputs, compares product and version details, and saves each result in a database. The dashboard shows the results; a report carries the source and human decisions. The implementation uses React for the web screen, FastAPI for the service, and PostgreSQL or SQLite for saved records. These are implementation choices, not a production certification. Docker packaging is included, but the Docker service was unavailable here, so a container startup was not verified. There is no connection to an industrial network.",
     },
     {
-        "title": "From finding to verified evidence",
-        "subtitle": "Role separation prevents generated text or a proposed ticket from becoming a remediation claim.",
+        "title": "People own every decision",
+        "subtitle": "A review, a work plan, approval, and proof of completed work are separate steps.",
         "bullets": [
             "Reviewer records applicability with a rationale",
             "Engineer proposes action; approver accepts or rejects",
@@ -339,81 +359,101 @@ SLIDES = [
         "metric": "4 ROLES",
         "metric_label": "Engineer · reviewer · approver · admin",
         "right_items": ["Decision", "Ticket", "Evidence", "Verification"],
-        "source": "Demo bearer tokens are public; production identity integration is required.",
-        "notes": "Show that decisions are distinct records. A reviewer records whether the advisory applies and why. An engineer proposes a mitigation with an owner and date, and a separate approver can approve or reject that plan. The engineer attaches evidence; the approver verifies a selected evidence record and explains the decision. The application hashes evidence text content and records the actor and role. Hashing only preserves a comparison value; it does not make the database immutable or prove the source document is authentic. The demo workflow uses visible local tokens for convenience and is not a production authentication setup. In a real deployment, use managed identities and protected audit storage.",
+        "source": "Demo passwords are visible; company login is needed before real use.",
+        "notes": "Show that the people do different jobs. The reviewer records whether the notice fits the equipment and why. The engineer proposes a plan; an approver accepts or rejects it. After work, the engineer adds a record or reference, and an approver checks that evidence. The application saves who did what and when. It also calculates a digital fingerprint from evidence text so a later copy can be compared. A fingerprint does not prove the original record is true or prevent a database administrator from changing it. Demo passwords are visible and only for this fictional demo. Real use needs company login and protected records.",
     },
     {
-        "title": "Positioning: complement an established OT security landscape",
-        "subtitle": "Broad platforms already offer inventory and exposure workflows; the proposed wedge is narrower.",
+        "title": "Where OTProof could fit",
+        "subtitle": "Existing security platforms may already help. OTProof’s possible role is a focused review and evidence workflow.",
         "bullets": [
-            "Claroty, Tenable, and Nozomi describe broad OT visibility and risk products",
-            "GRC / IRM platforms manage enterprise risk, controls, and audit workflow",
-            "Test if source-linked review fills a process gap or integrates cleanly",
+            "OT security platforms offer asset visibility and vulnerability management",
+            "Risk and compliance tools track controls, reviews, and audit records",
+            "Test whether this focused workflow fills a real gap or connects to them",
         ],
         "metric": "HYPOTHESIS",
         "metric_label": "Focused assurance is not yet a proven advantage",
-        "right_items": ["OT platforms", "GRC / ITSM", "OTProof integration target"],
+        "right_items": ["OT security platforms", "Risk / audit tools", "Possible connection point"],
         "kind": "competition",
         "source": "Claroty · Tenable · Nozomi · ServiceNow public product documentation; see notes.",
-        "notes": "Treat competitors respectfully and accurately. Claroty describes a broad CPS platform across inventory, exposure, protection, and secure access (https://claroty.com/platform). Tenable describes OT asset inventory, vulnerability prioritization, remediation and compliance integrations, and a combination of passive monitoring with vendor-approved active queries (https://www.tenable.com/products/ot-security). Nozomi documentation describes asset discovery, firmware information, and vulnerability assessment (https://technicaldocs.nozominetworks.com/guardian/latest/products/guardian/topics/intro/c_guardian.html). ServiceNow describes risk assessment and issue workflows within its GRC/IRM products (https://www.servicenow.com/docs/r/governance-risk-compliance/grc-risk-management-workspace/grc-risk-overview.html). OTProof has not outperformed these products and may not replace them. The hypothesis to validate is whether a file-first, evidence-centric reconciliation flow is useful in a small team or as a data/workflow connector to existing platforms. Pilot interviews and integration testing will decide.",
+        "notes": "Existing products may already cover this need. Claroty, Tenable, and Nozomi publicly describe broader industrial security products that include equipment inventory and vulnerability management. ServiceNow and other governance, risk, and compliance tools track organizational reviews, controls, and audit work. OTProof has not been compared head-to-head and has not proved an advantage. The idea to test is whether a small, file-based workflow that keeps source links and engineering decisions together helps a team that does not want another broad platform. Interviews and integration tests with operators should decide whether it fills a real gap. The full product references are listed in the research notes.",
     },
     {
-        "title": "A site license plus deployment and assurance services",
-        "subtitle": "Start with a transparent per-site hypothesis, then validate effort and willingness to pay.",
+        "title": "A possible per-site subscription model",
+        "subtitle": "The example prices below are assumptions to test with buyers, not sales or a forecast.",
         "bullets": [
-            "Illustrative license: $36,000 per site per year",
-            "Illustrative onboarding: $25,000 per new customer",
-            "Enterprise tiers, integrations, and ongoing review services are options",
+            "Example annual license: $36,000 per site",
+            "Example one-time setup: $25,000 per new customer",
+            "Other options: enterprise plans, integrations, and review services",
         ],
         "metric": "$2.70M",
-        "metric_label": "Illustrative ARR at 25 customers × 3 sites each",
-        "right_items": ["1 customer · $108k ARR", "5 customers · $540k ARR", "10 customers · $1.08m ARR", "25 customers · $2.70m ARR"],
+        "metric_label": "Example annual subscription income at 25 customers × 3 sites",
+        "right_items": ["1 customer · $108k / year", "5 customers · $540k / year", "10 customers · $1.08m / year", "25 customers · $2.70m / year"],
         "kind": "business",
         "source": "Illustrative arithmetic only; assumptions in OTProof_Business_Case.pdf.",
-        "notes": "These are illustrative scenarios, not market research, signed orders, or a revenue forecast. The model assumes three licensed sites per customer at $36,000 per site per year, $25,000 onboarding revenue per new customer, a 78% software gross margin, and 40% services gross margin. The 25-customer case implies 75 licensed sites and $2.70 million recurring ARR. First-year revenue includes onboarding; recurring gross profit excludes services. Sales cycle, procurement, hosting, support, data onboarding and integration costs are not yet measured. Validate the price with target operators and service providers, and derive gross margin from observed deployment and support costs.",
+        "notes": "These prices are examples to discuss with buyers, not signed orders or a forecast. The model assumes three sites for each customer, a $36,000 annual subscription for each site, and $25,000 one-time setup for each new customer. Annual recurring revenue means the value of subscriptions over a year. Gross margin means the share left after direct costs to deliver the software or setup service. The 25-customer example covers 75 sites and totals $2.70 million in annual subscription income before costs. Sales, hosting, support, data setup, and integration costs are not known yet. Validate prices and costs with operators before making a business forecast.",
     },
     {
-        "title": "MVP baseline: correct on a small, explicit fixture set",
-        "subtitle": "The results show the code follows the labels supplied; they do not estimate field accuracy.",
+        "title": "What the test shows—and what it does not",
+        "subtitle": "The software matched this small set of prepared examples; the result does not predict field accuracy.",
         "bullets": [
-            "14/14 labeled cases matched expected outcomes",
-            "4 applicable cases: 100% fixture precision/recall, 0 fixture false negatives",
-            "6/6 uncertainty cases abstained; 14/14 outputs had source traceability",
+            "All 14 labeled test cases matched their expected outcome",
+            "All 4 affected examples were found; none were missed in this set",
+            "All 6 uncertain examples went to human review; all results link to sources",
         ],
         "metric": "~1.05 ms",
-        "metric_label": "One matcher pass across 240 in-process pairs",
+        "metric_label": "One software-only run over 240 comparisons",
         "right_items": ["80 fictional assets", "3 advisory fixtures", "LLM extraction not run"],
         "kind": "validation",
         "source": "reports/evaluation_metrics.json · run dated 26 Oct 2026",
-        "notes": "This is a deliberately small synthetic fixture evaluation. It has 14 labeled pairs: four applicable, four not applicable, and six manual verification. All expected outcomes were produced, including every expected abstention, and each output carried source identifiers, URL, and excerpt. The 100% values are not statistically meaningful estimates for unseen products; four positives are too few for that. The approximately 1.05 millisecond benchmark is a single in-process matcher pass over 240 combinations on the development machine. It excludes database and network time. The local model was not run, extraction accuracy is not measured, and no operator time study or savings estimate has been validated.",
+        "notes": "This test uses only 14 prepared examples: four that should match, four that should not match, and six that lack enough information and should go to review. OTProof returned the expected outcome for all 14. It found all four matching examples and missed none in this small test. These counts do not predict how it will perform on equipment it has never seen. The reported time is one software-only pass over 240 combinations on the development computer; it excludes the database, internet, and people. The AI model was not run, and no review-time or savings study was done.",
     },
     {
-        "title": "Trust boundaries are product requirements",
-        "subtitle": "Keep OT interactions passive and offline in the MVP, and reserve consequential decisions for people.",
+        "title": "Safety and trust boundaries",
+        "subtitle": "The app reads files and public notices. It never contacts or changes industrial equipment.",
         "bullets": [
-            "No scan, exploit, device query, or configuration modification",
-            "Treat uploads and advisory text as untrusted content",
-            "Approval and verification require role-gated human action",
+            "No device scan, remote query, exploit, or configuration change",
+            "Uploaded files and notice text are treated as untrusted input",
+            "People approve work and check evidence before closing a finding",
         ],
         "metric": "HUMAN",
         "metric_label": "Owns applicability and remediation decisions",
-        "right_items": ["Public sources only", "Evidence and audit trail", "Production auth still required"],
-        "source": "Threat model, identity, immutable audit, and security testing remain pilot work.",
-        "notes": "Restate the safety boundary in practical terms. OTProof reads operator-uploaded files and public web sources only. It does not send packets to controllers or install fixes. Uploaded data and advisory pages are treated as untrusted. The optional model is explicitly told not to follow content instructions; structured output is validated against schema and source text. Role checks guard engineering decisions, ticket approvals, and verification. However, the demo token system is not production-grade, the database audit trail can be changed by a privileged database operator, and the tests are not a penetration test. A production pilot requires identity integration, threat modeling, security review, backup and retention controls, and operator approval.",
+        "right_items": ["Public sources only", "Evidence and action history", "Company login needed for real use"],
+        "source": "Security review, company login, and protected action records remain future work.",
+        "notes": "Restate the safety rules clearly. OTProof reads the spreadsheet an operator uploads and public web pages. It does not send requests to equipment or install fixes. Uploaded spreadsheets and notice text are treated as untrusted; embedded instructions cannot tell the AI or application what to do. Only the right human role can record a review, approve a plan, or verify evidence. Still, the demo login is not safe for production, and a database administrator could alter stored history. These tests are not an independent security assessment. Before a real pilot, add company login, plan how records will be protected, review likely attack paths, test backups, and get operator approval.",
     },
     {
-        "title": "Next: validate with OT engineers and real workflow constraints",
-        "subtitle": "The next milestone is evidence of usefulness, not a larger feature checklist.",
+        "title": "Next: test with operators and engineers",
+        "subtitle": "The next step is to learn whether this helps real teams and fits their existing process.",
         "bullets": [
-            "Recruit 3–5 operator or managed-service design partners",
-            "Build a blinded, multi-vendor adjudication set with engineers",
-            "Measure false negatives, abstentions, review time, and onboarding effort",
+            "Invite 3–5 operators or service providers to try a controlled pilot",
+            "Ask engineers to label cases before seeing the software’s result",
+            "Measure missed cases, human-review rate, time, and setup effort",
         ],
         "metric": "PILOT ASK",
         "metric_label": "Water / energy operator + OT engineering reviewers",
-        "right_items": ["Broaden source/vendor coverage", "Add SSO and durable audit", "Test CMMS / GRC connectors"],
+        "right_items": ["Add more vendors and sources", "Add company sign-in and protected audit records", "Connect to maintenance and risk systems if users need it"],
         "source": "No customer interviews, paid pilots, or measured savings are claimed yet.",
-        "notes": "Close with a concrete ask: access to an OT security and engineering team willing to evaluate a controlled pilot using non-sensitive or approved inventory data. The pilot should use multiple vendors, equipment families, and source formats. Engineers should create expected labels before seeing the matcher output, then adjudicate disagreements. Measure missing-data abstention quality, false negatives, false positives, source traceability, minutes per asset/advisory review, onboarding hours, integration requirements, and willingness to pay. Later work includes SSO, stronger audit retention, packaging hardening, and CMMS/GRC integration. This pitch makes no claim of customers, market sizing, savings, or improved risk outcomes. Those are the hypotheses the pilot should test.",
+        "notes": "Close by asking a water or energy operator and its engineers to review a controlled pilot using approved sample inventory. Include several vendors and equipment families. Ask engineers to label whether each notice applies before showing them OTProof's results, then compare any disagreements. Measure how often OTProof finds a relevant affected product, how often it misses one, how often it asks for human review, how long each review takes, and the effort needed to prepare the data. Later work could add company sign-in, stronger protection for action records, and connections to maintenance or risk tools. No customers, savings, or risk reduction are claimed today; the pilot should test those ideas.",
+    },
+    {
+        "title": "Plain-language glossary",
+        "subtitle": "A quick translation of the terms used in this presentation.",
+        "bullets": [
+            "Asset: a device or software record in the operator’s equipment list",
+            "Advisory: a public security notice about a product weakness",
+            "Candidate match: a possible link that still needs an engineer’s review",
+            "Evidence: a record that supports a human decision",
+        ],
+        "metric": "KEY TERMS",
+        "metric_label": "Read the source and inventory record together",
+        "right_items": [
+            "OT · computers and controllers for physical processes",
+            "CISA · U.S. Cybersecurity and Infrastructure Security Agency",
+            "CVE · public ID assigned to a specific vulnerability",
+            "KEV · CISA list of vulnerabilities known to be exploited",
+        ],
+        "source": "More terms and examples: README.md and OTProof_Technical_Design.md",
+        "notes": "Use this glossary whenever a term is unfamiliar. Operational technology, or OT, means computers and controllers used to monitor or control physical processes such as water pumping or electricity generation. CISA is the US Cybersecurity and Infrastructure Security Agency, which publishes the advisories used in the demo. CVE is the public identifier assigned to a specific vulnerability. CISA KEV is a public list of vulnerabilities CISA knows have been exploited. A candidate match is a possible link produced by comparing records; it is not an engineering decision. Evidence is a work record, test result, or other reference that supports a human decision. Annual recurring revenue means the yearly value of recurring subscriptions, not profit or guaranteed sales.",
     },
 ]
 
@@ -629,7 +669,7 @@ def idea_pdf() -> None:
         canvas.setFont("Helvetica-Bold", 7)
         canvas.setFillColor(hex_color(MUTED))
         canvas.drawString(15 * mm, 8 * mm, "OTPROOF  /  EUREKA HACKATHON  /  26 OCT 2026")
-        canvas.drawRightString(w - 15 * mm, 8 * mm, f"{doc.page:02d}  /  08")
+        canvas.drawRightString(w - 15 * mm, 8 * mm, f"{doc.page:02d}  /  {len(IDEA_PAGES):02d}")
         canvas.restoreState()
 
     story = []
@@ -740,7 +780,7 @@ def ppt_diagram(slide, kind: str, item: dict) -> None:
     ppt_box(slide, x, y, w, h, NAVY_2)
     make_ppt_text(slide, x + .3, y + .28, w - .6, .3, "OTPROOF / FIELD VIEW", size=8, color="8FC7BE", bold=True)
     if kind == "architecture":
-        labels = ["INVENTORY + SOURCES", "VALIDATION + CACHE", "MATCH + WORKFLOW", "REPORT + AUDIT"]
+        labels = ["INVENTORY + NOTICES", "CHECK + SAVE", "MATCH + REVIEW", "DASHBOARD + REPORT"]
         for i, label in enumerate(labels):
             bx = x + .42 + (i % 2) * 2.25
             by = y + .92 + (i // 2) * 1.35
@@ -750,7 +790,7 @@ def ppt_diagram(slide, kind: str, item: dict) -> None:
             connector = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, PptInches(ax), PptInches(ay), PptInches(bx), PptInches(by))
             connector.line.color.rgb = PPTColor.from_string(TEAL)
             connector.line.width = PptPt(2)
-        make_ppt_text(slide, x + .55, y + 3.83, w - 1.1, .46, "OPTIONAL LOCAL LLM · suggestion only", size=10, color="C4DBD8", align=PP_ALIGN.CENTER)
+        make_ppt_text(slide, x + .55, y + 3.83, w - 1.1, .46, "OPTIONAL LOCAL AI · suggestion only", size=10, color="C4DBD8", align=PP_ALIGN.CENTER)
     elif kind == "workflow":
         steps = ["IMPORT", "MATCH", "REVIEW", "PLAN", "EVIDENCE", "VERIFY"]
         for i, label in enumerate(steps):
@@ -759,7 +799,7 @@ def ppt_diagram(slide, kind: str, item: dict) -> None:
             make_ppt_text(slide, x + .4, cy + .08, .48, .25, str(i + 1), size=11, color=WHITE, bold=True, align=PP_ALIGN.CENTER)
             make_ppt_text(slide, x + 1.1, cy + .08, 3.6, .25, label, size=11, color=WHITE, bold=True)
     elif kind == "competition":
-        labels = ["CLAROTY", "TENABLE", "NOZOMI", "SERVICE / GRC"]
+        labels = ["CLAROTY", "TENABLE", "NOZOMI", "RISK / AUDIT"]
         for i, label in enumerate(labels):
             by = y + .86 + i * .74
             ppt_box(slide, x + .35, by, 1.6, .5, "2C4955")
@@ -775,7 +815,7 @@ def ppt_diagram(slide, kind: str, item: dict) -> None:
             if i < len(rows) - 1:
                 ppt_box(slide, x + .4, by + .43, w - .8, .01, "48606A", radius=False)
     elif kind == "validation":
-        metric_cards = [("14/14", "labels"), ("4/4", "applicable recall"), ("6/6", "abstain"), ("14/14", "traceable")]
+        metric_cards = [("14/14", "tests passed"), ("4/4", "affected cases found"), ("6/6", "sent to review"), ("14/14", "sources linked")]
         for i, (value, label) in enumerate(metric_cards):
             bx = x + .4 + (i % 2) * 2.3
             by = y + .95 + (i // 2) * 1.24
@@ -904,7 +944,7 @@ def deck_pdf() -> None:
             c.roundRect(x, y, w, h, 11, fill=1, stroke=0)
             wrap_canvas_text(c, "OTPROOF / FIELD VIEW", x + .3 * 72, y + h - .47 * 72, w - .6 * 72, font="Helvetica-Bold", size=8, leading=10, color="8FC7BE")
             if item.get("kind") == "architecture":
-                labels = ["INVENTORY + SOURCES", "VALIDATION + CACHE", "MATCH + WORKFLOW", "REPORT + AUDIT"]
+                labels = ["INVENTORY + NOTICES", "CHECK + SAVE", "MATCH + REVIEW", "DASHBOARD + REPORT"]
                 for i, label in enumerate(labels):
                     bx = x + (.42 + (i % 2) * 2.25) * 72
                     by = y + (3.0 - (i // 2) * 1.35) * 72
@@ -913,7 +953,7 @@ def deck_pdf() -> None:
                     c.setFillColor(colors.white)
                     c.setFont("Helvetica-Bold", 8)
                     c.drawCentredString(bx + .94 * 72, by + .29 * 72, label)
-                wrap_canvas_text(c, "OPTIONAL LOCAL LLM / suggestion only", x + .5 * 72, y + .48 * 72, w - 1 * 72, size=8.5, leading=10, color="C4DBD8")
+                wrap_canvas_text(c, "OPTIONAL LOCAL AI / suggestion only", x + .5 * 72, y + .48 * 72, w - 1 * 72, size=8.5, leading=10, color="C4DBD8")
             elif item.get("kind") == "workflow":
                 steps = ["IMPORT", "MATCH", "REVIEW", "PLAN", "EVIDENCE", "VERIFY"]
                 yy2 = y + h - .95 * 72
@@ -927,7 +967,7 @@ def deck_pdf() -> None:
                     c.setFont("Helvetica-Bold", 10)
                     c.drawString(x + 1.1 * 72, yy2 + .12 * 72 - i * .56 * 72, label)
             elif item.get("kind") == "validation":
-                cards = [("14/14", "labels"), ("4/4", "applicable recall"), ("6/6", "abstain"), ("14/14", "traceable")]
+                cards = [("14/14", "tests passed"), ("4/4", "affected cases found"), ("6/6", "sent to review"), ("14/14", "sources linked")]
                 for i, (value, label) in enumerate(cards):
                     bx = x + (.4 + (i % 2) * 2.3) * 72
                     by = y + (2.75 - (i // 2) * 1.24) * 72
@@ -954,7 +994,7 @@ def deck_pdf() -> None:
                         c.setStrokeColor(hex_color("48606A"))
                         c.line(x + .4 * 72, yy2 - .23 * 72 - i * .78 * 72, x + 4.85 * 72, yy2 - .23 * 72 - i * .78 * 72)
             elif item.get("kind") == "competition":
-                labels = ["CLAROTY", "TENABLE", "NOZOMI", "SERVICE / GRC"]
+                labels = ["CLAROTY", "TENABLE", "NOZOMI", "RISK / AUDIT"]
                 yy2 = y + h - .9 * 72
                 for i, label in enumerate(labels):
                     by = yy2 - i * .74 * 72
@@ -1037,26 +1077,26 @@ def business_pdf(metrics: dict) -> None:
     styles = pdf_styles()
     width = A4[0] - 28 * mm
     p1 = [
-        para("COMMERCIAL HYPOTHESES", styles["eyebrow"]),
-        para("A focused layer for OT vulnerability assurance", styles["title"]),
+        para("BUSINESS MODEL TO TEST", styles["eyebrow"]),
+        para("Could focused review software help industrial operators?", styles["title"]),
         para("Potential users span small operators, contractors, and managed OT security providers. This is a customer discovery plan, not a market-size estimate.", styles["deck"]),
         para("Who may buy or champion", styles["h2"]),
         para("Municipal water and wastewater utilities; power and energy operators; oil and gas infrastructure; industrial maintenance contractors; managed OT security providers; and defense-support facilities. Likely champions include an OT security lead, plant engineering manager, asset owner, CISO, or managed-service practice owner.", styles["body"]),
         para("Position relative to existing products", styles["h2"]),
-        para("Public product pages describe mature OT platforms and GRC/IRM workflows. OTProof is not positioned as a proven replacement. Its hypothesis is a small source-linked reconciliation workflow that may complement existing discovery, vulnerability, CMMS, and audit systems.", styles["body"]),
+        para("Public product pages describe established industrial security platforms and risk, compliance, and audit tools. OTProof is not positioned as a proven replacement. Its hypothesis is a small source-linked review workflow that may connect equipment records with existing security, maintenance, and audit systems.", styles["body"]),
     ]
     competitor_rows = [
         ["Category", "Publicly described capability", "OTProof implication"],
-        ["Claroty", "CPS asset inventory, exposure management, network protection, secure access, threat detection.", "Competes for broad OT platform budgets; possible data/workflow integration."],
-        ["Tenable", "OT inventory, exposure prioritization, remediation guidance, integrations, compliance reporting.", "Broad incumbent; MVP has no coverage or accuracy advantage claim."],
+        ["Claroty", "Industrial equipment inventory, security risk management, network protection, secure access, and threat detection.", "Competes for broad industrial security budgets; possible data/workflow integration."],
+        ["Tenable", "Industrial equipment inventory, risk prioritization, remediation guidance, integrations, and compliance reporting.", "Broad incumbent; MVP has no coverage or accuracy advantage claim."],
         ["Nozomi", "Asset discovery, firmware details, vulnerability assessment, network visibility.", "Potential integration target; no comparative test run."],
-        ["GRC / IRM", "Risk assessment, control, compliance, and audit workflow, e.g. ServiceNow.", "Potential downstream system of record; integration is future work."],
+        ["Risk / audit tools", "Risk assessment, controls, compliance, and audit workflow, e.g. ServiceNow.", "Potential downstream record system; integration is future work."],
     ]
     p1.extend([styled_table(competitor_rows, [width * .15, width * .47, width * .38], font_size=7), Spacer(1, 3 * mm)])
     p1.extend([
-        para("Differentiation hypothesis", styles["h2"]),
-        para("OTProof emphasizes exact inventory/advisory evidence, conservative abstention when the source or inventory is incomplete, and a human assurance trail in one narrow workflow. Existing platforms may already solve the buyer's problem. Interviews and integration trials must establish whether a distinct product is useful.", styles["body"]),
-        callout_table("Evidence to test: product coverage, engineer agreement, false negatives, abstention quality, review minutes per pair, onboarding effort, integration demand, willingness to pay, and renewal interest.", width),
+        para("The idea to test", styles["h2"]),
+        para("The product idea is to put exact equipment/notice evidence, careful handling of missing information, and a record of human decisions in one focused workflow. Existing products may already solve the problem. Interviews and integration trials must show whether an additional tool helps.", styles["body"]),
+        callout_table("Evidence to test: product coverage, agreement with engineer decisions, missed affected assets, quality of cases sent to review, review minutes, setup effort, integration demand, willingness to pay, and renewal interest.", width),
     ])
 
     scenarios = [
@@ -1067,37 +1107,37 @@ def business_pdf(metrics: dict) -> None:
         ["25", "75", "$2,700,000", "$3,325,000", "$2,356,000"],
     ]
     p2 = [
-        para("ILLUSTRATIVE UNIT ECONOMICS", styles["eyebrow"]),
-        para("Recurring site license with paid implementation", styles["title"]),
+        para("EXAMPLE PRICES AND COSTS", styles["eyebrow"]),
+        para("A possible site subscription and setup fee", styles["title"]),
         para("A transparent first model makes the assumptions easy to challenge before a commercial forecast is attempted.", styles["deck"]),
         para("Scenario inputs", styles["h2"]),
-        para("3 licensed sites per customer; $36,000 annual license per site; $25,000 one-time onboarding per new customer; 78% software gross margin; 40% onboarding-services gross margin. Year-1 revenue equals recurring ARR plus onboarding. Gross profit equals recurring ARR × 78% plus onboarding × 40%.", styles["body"]),
+        para("Assumptions: 3 licensed sites per customer; $36,000 annual license per site; and $25,000 one-time setup per new customer. Annual recurring revenue (ARR) is the yearly subscription income. Gross margin is the share left after direct delivery costs; the example assumes 78% for software and 40% for setup services. First-year revenue adds the subscription and setup income. Estimated gross profit applies those margins to each income source.", styles["body"]),
         styled_table(scenarios, [width * .12, width * .1, width * .22, width * .25, width * .31], font_size=7.5),
         Spacer(1, 3 * mm),
         callout_table("Illustrative arithmetic only. The scenarios are not customer commitments, an addressable-market calculation, bookings, or a revenue forecast. No revenue has been generated by this MVP.", width),
         para("Potential contract structure", styles["h2"]),
-        para("Annual per-site subscription; enterprise tier for multi-site operators; integration and deployment fees; and optional ongoing assurance services. A local/on-premises deployment option may matter for sensitive inventories. Each component needs cost and procurement validation.", styles["body"]),
+        para("Possible contracts include a yearly site subscription, a multi-site enterprise plan, setup and connection fees, and optional ongoing review services. Some operators may prefer software installed inside their own environment to protect sensitive equipment lists. Each option needs cost and procurement validation.", styles["body"]),
     ]
     labor_hours = 80 * 12 * (0.5 - 0.25)
     labor_savings = labor_hours * 80
     p2.extend([
         para("Illustrative labor sensitivity, not measured savings", styles["h2"]),
-        para(f"Assume 80 assets, 12 relevant asset/advisory pairs per year, and a reduction from 30 to 15 minutes of initial triage per pair. That yields {labor_hours:.0f} theoretical hours, or ${labor_savings:,.0f} at an assumed $80 loaded hourly rate. This excludes engineering remediation effort and assumes every pair realizes the time reduction; the MVP has no human time study.", styles["body"]),
+        para(f"Assume 80 assets, 12 relevant equipment/notice pairs per year, and a reduction in the initial review from 30 to 15 minutes per pair. That yields {labor_hours:.0f} theoretical hours, or ${labor_savings:,.0f} at an assumed $80 staff cost per hour. This excludes engineering work after review and assumes every pair realizes the time reduction. The MVP has no human time study, so this is not measured savings.", styles["body"]),
     ])
 
     p3 = [
-        para("GO-TO-MARKET AND VALIDATION", styles["eyebrow"]),
+        para("FINDING CUSTOMERS AND TESTING VALUE", styles["eyebrow"]),
         para("Sell a measurable workflow improvement, not an AI promise", styles["title"]),
         para("A controlled design-partner pilot should prove that the tool fits plant roles, records, and approval practices before product expansion.", styles["deck"]),
         para("Commercial route", styles["h2"]),
-        para("Begin with 3–5 design partners from water, energy, industrial maintenance, or managed OT security. Offer an on-premises or isolated IT deployment for approved sample inventories. Integrate first with CSV/XLSX, then with a CMMS/GRC system only where pilot users show a recurring need. Sell onboarding as inventory normalization and workflow configuration, not a promise of automated risk removal.", styles["body"]),
+        para("Begin with 3–5 pilot partners from water, energy, industrial maintenance, or managed OT security. Offer a local installation or isolated IT setup for approved sample inventories. Start with spreadsheets, then connect to a maintenance or risk-management system only if pilot users show a recurring need. Sell setup as help preparing inventory records and configuring the workflow, not as automatic risk removal.", styles["body"]),
         para("Customer value to measure", styles["h2"]),
-        para("Measure review minutes per advisory/asset pair, the number of data gaps found, engineer agreement, false-negative adjudications, abstention rate, evidence completeness, time to export an audit package, onboarding hours, and continued use after the pilot. Potential benefits include less repeated source lookup, clearer audit evidence, and earlier engineering assessment of exposure. Those benefits remain hypotheses until measured; OTProof does not itself establish compliance or reduce operational risk.", styles["body"]),
+        para("Measure review minutes per equipment/notice pair, data gaps found, agreement with engineers, cases where an affected asset was missed, cases sent to human review, evidence completeness, time to export an audit package, setup hours, and continued use after the pilot. Potential benefits include less repeated source lookup, clearer audit evidence, and earlier engineering assessment. Those benefits remain hypotheses until measured; OTProof does not itself establish compliance or reduce operational risk.", styles["body"]),
         para("Key risks and response", styles["h2"]),
         para("Weak inventory quality can limit results; expose stale/missing data and assign owners. Advisory parsing can miss vendor nuance; preserve source excerpts and abstain. Established products may duplicate capabilities; position as complement and integrate. Sensitive asset information limits cloud adoption; test local deployment. Human review still costs time; quantify actual time saved and false-positive burden. Buyers may reject price; test paid pilots and renewal intent.", styles["body"]),
         para("Sources and market context", styles["h2"]),
-        para("Competitor summaries are based on public vendor pages, not independent product tests: Claroty (claroty.com/platform), Tenable (tenable.com/products/ot-security), Nozomi (technicaldocs.nozominetworks.com/guardian), ServiceNow GRC (servicenow.com/docs). Full linked citations are in docs/RESEARCH_NOTES.md. Pricing, headcount, gross margin, customer conversion, and savings assumptions are illustrative.", styles["body"]),
-        callout_table("Pilot success gate: verified engineering agreement and useful abstentions across multiple vendors, safe deployment acceptance, source traceability, measurable review-time change, and willingness to pay.", width),
+        para("Competitor summaries are based on public vendor pages, not independent product tests: Claroty (claroty.com/platform), Tenable (tenable.com/products/ot-security), Nozomi (technicaldocs.nozominetworks.com/guardian), and ServiceNow risk tools (servicenow.com/docs). Full links are in docs/RESEARCH_NOTES.md. Pricing, margins, customer conversion, and savings assumptions are illustrative.", styles["body"]),
+        callout_table("Before expanding: confirm that engineers agree with results across several vendors, uncertain cases are sent to review, local deployment is acceptable, sources are traceable, review time improves, and buyers are willing to pay.", width),
     ]
     build_narrative_pdf(ROOT / "OTProof_Business_Case.pdf", "Business Case", [p1, p2, p3])
 
@@ -1107,25 +1147,30 @@ def evaluation_pdf(metrics: dict) -> None:
     width = A4[0] - 28 * mm
     det = metrics["deterministic_applicability"]
     data = metrics["dataset"]
+    true_affected = det["confusion_matrix"]["applicable"]["applicable"]
+    expected_affected = data["labels"]["applicable"]
+    traceable_count = det["source_traceability"]["pairs_with_advisory_id_url_and_excerpt"]
+    total_labeled = det["source_traceability"]["pairs_total"]
     p1 = [
-        para("FIXTURE EVALUATION · 26 OCT 2026", styles["eyebrow"]),
-        para("A small deterministic baseline, measured honestly", styles["title"]),
-        para("The evaluation checks whether the implementation follows an explicit, reproducible synthetic label set. It does not estimate real-world accuracy.", styles["deck"]),
-        para("Dataset and measured result", styles["h2"]),
-        para(f"{data['assets']} fictional assets × {data['advisories']} real public CISA advisory fixtures = {data['full_cross_product_pairs_benchmarked']} in-process comparison pairs. The labeled set has {data['labeled_pairs']} asset/advisory cases: 4 applicable, 4 not applicable, 6 manual verification.", styles["body"]),
+        para("SMALL PREPARED TEST SET · 26 OCT 2026", styles["eyebrow"]),
+        para("A small rule-based test, measured honestly", styles["title"]),
+        para("The evaluation checks whether the software returns the outcomes prepared in advance for these examples. It does not estimate real-world accuracy.", styles["deck"]),
+        para("Test setup and results", styles["h2"]),
+        para(f"The test compares {data['assets']} fictional equipment records with {data['advisories']} real CISA notices ({data['full_cross_product_pairs_benchmarked']} software-only comparisons). Fourteen asset/notice examples were labeled ahead of time: 4 likely affected, 4 outside the notice conditions, and 6 that need a human check.", styles["body"]),
         styled_table([
             ["Measure", "Result", "Scope"],
-            ["Labeled classification accuracy", f"{det['labeled_case_accuracy']:.0%}", "14 authored synthetic cases"],
-            ["Applicable precision / recall", f"{det['applicable_precision']:.0%} / {det['applicable_recall']:.0%}", "4 positive examples"],
-            ["Applicable false-negative rate", f"{det['applicable_false_negative_rate']:.0%}", "In this fixture only"],
-            ["Expected uncertainty abstention", f"{det['uncertainty']['manual_review_cases_abstained_correctly']}/{det['uncertainty']['manual_review_cases_expected']}", "Missing/stale/ambiguous cases"],
-            ["Source traceability", f"{det['source_traceability']['pairs_with_advisory_id_url_and_excerpt']}/{det['source_traceability']['pairs_total']}", "ID + URL + excerpt present"],
-            ["Matcher benchmark", f"{det['timing']['elapsed_ms']:.2f} ms total", "One 240-pair in-process pass"],
+            ["Prepared examples with expected result", f"{sum(case['correct'] for case in metrics['cases'])} of {data['labeled_pairs']}", "Hand-labeled synthetic examples"],
+            ["Affected examples correctly flagged", f"{true_affected} of {expected_affected}", "Only four in this small test"],
+            ["Missed affected examples", f"{expected_affected - true_affected} of {expected_affected}", "In this fixture only"],
+            ["Uncertain examples sent to review", f"{det['uncertainty']['manual_review_cases_abstained_correctly']}/{det['uncertainty']['manual_review_cases_expected']}", "Missing/old/unclear records"],
+            ["Results with source ID, link, and excerpt", f"{traceable_count} of {total_labeled}", "All labeled examples"],
+            ["Time for software-only comparison", f"{det['timing']['elapsed_ms']:.2f} ms total", "One pass over 240 pairs"],
         ], [width * .32, width * .22, width * .46]),
+        para("How to read this: an affected example is a case labeled in advance as matching the notice. “Sent to review” means the software lacked enough support to give a firm result, so a person must check. A missed affected example is a false negative. These counts describe only the prepared test cases.", styles["small"]),
         Spacer(1, 3 * mm),
-        callout_table("Interpretation: 14/14 is evidence that this fixed test set passes, not that OTProof will achieve 100% precision or recall on operator inventories. Four positive labels are far too few for a field performance claim.", width),
-        para("AI extraction", styles["h2"]),
-        para("Local Ollama inference was not run. No advisory extraction accuracy, summary quality, or AI productivity benefit is claimed. Deterministic CISA HTML/CSAF parsing is covered by unit tests, but no independent multi-vendor extraction gold set has been labeled.", styles["body"]),
+        callout_table("Interpretation: these results show that OTProof passed this small, prepared test set. Four affected examples are far too few to predict how it will perform on a real operator's equipment list.", width),
+        para("AI suggestions", styles["h2"]),
+        para("No local AI model was run. Its ability to extract details or summarize notices has not been measured. The public-notice importer has software tests, but no diverse set of notices has been labeled by experts for comparison.", styles["body"]),
     ]
     case_rows = [["Asset", "Advisory", "Expected", "Observed", "Source linked"]]
     for case in metrics["cases"]:
@@ -1134,7 +1179,7 @@ def evaluation_pdf(metrics: dict) -> None:
             case["actual"].replace("_", " "), "Yes" if case["source_traceable"] else "No",
         ])
     cm = det["confusion_matrix"]
-    conf_rows = [["Expected \\ Observed", "Applicable", "Not applicable", "Manual review"]]
+    conf_rows = [["Expected \\ Actual", "Likely affected", "Outside notice", "Human review"]]
     for expected in ["applicable", "not_applicable", "requires_manual_verification"]:
         conf_rows.append([
             expected.replace("_", " "),
@@ -1143,15 +1188,15 @@ def evaluation_pdf(metrics: dict) -> None:
             str(cm[expected]["requires_manual_verification"]),
         ])
     p2 = [
-        para("CASE REGISTER", styles["eyebrow"]),
-        para("All labeled examples and confusion counts", styles["title"]),
-        para("The examples exercise exact affected product/version, outside-bound versions, a curated spelling alias, a similar but different product, missing/unsupported details, unknown model, stale inventory, and duplicate assets.", styles["deck"]),
+        para("EXAMPLE REGISTER", styles["eyebrow"]),
+        para("The test cases and what OTProof returned", styles["title"]),
+        para("The examples cover exact and outside version matches, spelling differences, a similar but different product, missing details, unknown model, old inventory, and duplicate assets. The table compares the expected result with OTProof's observed result.", styles["deck"]),
         styled_table(case_rows, [width * .2, width * .22, width * .2, width * .2, width * .18], font_size=6.5),
         Spacer(1, 4 * mm),
-        para("Three-class confusion matrix", styles["h2"]),
+        para("Expected results compared with actual results", styles["h2"]),
         styled_table(conf_rows, [width * .33, width * .21, width * .23, width * .23], font_size=7),
         Spacer(1, 3 * mm),
-        callout_table("No semantic similarity model was used. Manual review is an intentional output for uncertain inventory and configuration cases.", width),
+        callout_table("The software does not guess based on similar-sounding product names. Human review is the intended result when equipment or notice details are unclear.", width),
     ]
     timing = det["timing"]
     p3 = [
@@ -1159,13 +1204,13 @@ def evaluation_pdf(metrics: dict) -> None:
         para("Security and availability checks", styles["title"]),
         para("The test suite checks local software behavior and known edge cases. It does not certify the system or validate real OT outcomes.", styles["deck"]),
         para("Checks included", styles["h2"]),
-        para("Prompt-injection-like instructions are retained as untrusted advisory content; the extraction adapter rejects unsupported source values and quotations. Duplicate inventory IDs and macro-enabled workbooks are rejected. A failed source refresh serves a persisted stale snapshot. Role tests cover unauthorized remediation approval/verification, and the workflow API test records a human applicability decision, ticket approval, simulated evidence, and approver verification.", styles["body"]),
+        para("Tests include security instructions embedded in advisory text; the AI helper is told to treat them as untrusted, and unsupported extracted details or quotes are rejected. Duplicate equipment IDs and macro-enabled spreadsheets are rejected. When a source refresh fails, OTProof can use a saved older copy and mark it stale. Permission tests check that users cannot approve or verify work outside their role. The workflow test records a human decision, approved plan, simulated evidence, and a separate evidence check.", styles["body"]),
         para("Performance scope", styles["h2"]),
         para(f"{timing['elapsed_ms']:.3f} ms elapsed for one in-process pass over {timing['full_cross_product_pairs']} pairs ({timing['milliseconds_per_pair']:.4f} ms/pair on this developer machine). The measurement excludes database queries, HTTP ingestion, browser rendering, concurrency, cold starts, and human review. Operator review time was not instrumented or measured.", styles["body"]),
         para("Limits", styles["h2"]),
         para("Small synthetic sample; three Rockwell CISA fixtures; no blinded ground truth; no live local model evaluation; no industrial vendor/model breadth study; no penetration test; no production load test; and no human time study. The test client emits a Starlette warning that the installed HTTPX integration is deprecated, though tests pass. Docker Compose could not be run because a daemon was unavailable.", styles["body"]),
         para("Next evaluation protocol", styles["h2"]),
-        para("Recruit OT engineers from multiple operators; pre-label a larger, source-reviewed corpus across vendors and versions; blind reviewers to system decisions; adjudicate disagreements; report precision, recall, false-negative rate, abstention coverage, calibration only if statistically supported, source traceability, and review minutes. Run the deterministic baseline first. Evaluate the LLM separately against gold spans and exact field values. Test stale/offline feeds, large inventory imports, model-output injection, RBAC, and deployment security.", styles["body"]),
+        para("Recruit engineers from several operators. Ask them to label source-reviewed examples across vendors and versions before they see OTProof's results. Compare disagreements and report how often the system finds a relevant affected product, how often it misses one, how often it asks for human review, whether each result links to its source, and minutes spent per review. Test the rule-based matcher first. Evaluate AI extraction separately by comparing its suggested fields with the source and human labels. Also test unavailable sources, large spreadsheets, hostile text, permissions, and deployment security.", styles["body"]),
         callout_table("The current result is a build check, not a customer study, security certification, safety case, or verified reduction in operational risk.", width),
     ]
     build_narrative_pdf(ROOT / "OTProof_Evaluation_Report.pdf", "Evaluation Report", [p1, p2, p3])
@@ -1173,19 +1218,19 @@ def evaluation_pdf(metrics: dict) -> None:
 
 def architecture_svg() -> None:
     svg = '''<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="920" viewBox="0 0 1440 920" role="img" aria-labelledby="title desc">
-<title id="title">OTProof MVP architecture</title><desc id="desc">Passive architecture showing operator inventory and public sources entering an API and database, deterministic matcher and human workflow, and dashboard and report outputs. Optional local LLM is suggestion-only.</desc>
+<title id="title">OTProof: plain-language architecture</title><desc id="desc">An operator uploads an equipment list. OTProof reads public security notices, compares product and version details, and records human review in a database. People check evidence. Optional AI can draft text but cannot decide or change equipment.</desc>
 <defs><marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1 1L10 6L1 11" fill="none" stroke="#25A99A" stroke-width="2"/></marker><style>text{font-family:Inter,Arial,sans-serif;fill:#18313A}.h{font-size:32px;font-weight:700}.sub{font-size:16px;fill:#63777C}.box{fill:#fff;stroke:#D4E2E0;stroke-width:2}.dark{fill:#1C3441;stroke:#1C3441}.teal{fill:#25A99A}.label{font-size:13px;font-weight:700;letter-spacing:1.5px;fill:#25A99A}.boxt{font-size:20px;font-weight:700}.small{font-size:15px;fill:#63777C}.darkt{fill:#fff;font-size:20px;font-weight:700}.darksmall{fill:#D0E0DF;font-size:15px}.line{stroke:#25A99A;stroke-width:3;fill:none;marker-end:url(#arrow)}.dash{stroke:#E08B62;stroke-width:2;stroke-dasharray:8 7;fill:none}</style></defs>
 <rect width="1440" height="920" fill="#F3F7F6"/><rect x="0" y="0" width="1440" height="14" fill="#25A99A"/>
-<text x="72" y="78" class="label">PASSIVE · SOURCE-TRACEABLE · HUMAN-APPROVED</text><text x="72" y="124" class="h">OTProof MVP Architecture</text><text x="72" y="158" class="sub">A modular monolith. No route or service reaches an OT device or network.</text>
-<rect x="72" y="218" width="300" height="170" rx="18" class="box"/><text x="98" y="253" class="label">INPUTS</text><text x="98" y="292" class="boxt">Operator inventory</text><text x="98" y="324" class="small">CSV / XLSX · field validation</text><text x="98" y="352" class="small">Asset identity · version · owner</text>
-<rect x="72" y="444" width="300" height="222" rx="18" class="box"/><text x="98" y="480" class="label">PUBLIC ADVISORIES</text><text x="98" y="520" class="boxt">CISA ICS / CSAF</text><text x="98" y="551" class="boxt">CISA KEV · NVD 2.0</text><text x="98" y="585" class="small">Approved vendor HTTPS sources</text><text x="98" y="615" class="small">Cache · timestamps · stale fallback</text>
-<rect x="470" y="268" width="340" height="350" rx="20" class="dark"/><text x="502" y="309" class="label" fill="#8FC7BE">MODULAR API SERVICE</text><text x="502" y="358" class="darkt" fill="#FFFFFF">FastAPI + Pydantic</text><text x="502" y="394" class="darksmall" fill="#D0E0DF">Inventory &amp; advisory validation</text><text x="502" y="425" class="darksmall" fill="#D0E0DF">Source adapters and normalization</text><text x="502" y="456" class="darksmall" fill="#D0E0DF">RBAC · workflow · audit services</text><rect x="502" y="496" width="275" height="82" rx="12" fill="#25A99A"/><text x="522" y="531" class="darkt" fill="#FFFFFF">Deterministic matcher</text><text x="522" y="557" class="darksmall" fill="#D0E0DF">Identity + published constraints</text>
-<rect x="910" y="218" width="265" height="170" rx="18" class="box"/><text x="938" y="253" class="label">PERSISTENCE</text><text x="938" y="294" class="boxt">PostgreSQL</text><text x="938" y="325" class="small">SQLAlchemy · Alembic</text><text x="938" y="353" class="small">SQLite for local demo</text>
-<rect x="910" y="444" width="265" height="222" rx="18" class="box"/><text x="938" y="480" class="label">HUMAN WORKFLOW</text><text x="938" y="520" class="boxt">Review → ticket</text><text x="938" y="551" class="boxt">Evidence → verify</text><text x="938" y="585" class="small">Engineer · reviewer · approver</text><text x="938" y="615" class="small">Human action required to close</text>
-<rect x="1250" y="300" width="120" height="285" rx="18" class="box"/><text x="1270" y="339" class="label">OUTPUT</text><text x="1270" y="388" class="boxt">React</text><text x="1270" y="419" class="small">Dashboard</text><text x="1270" y="460" class="boxt">JSON</text><text x="1270" y="491" class="small">PDF report</text><text x="1270" y="535" class="small">Audit trail</text>
+<text x="72" y="78" class="label">PUBLIC NOTICES · HUMAN REVIEW · NO DEVICE CONNECTION</text><text x="72" y="124" class="h">How OTProof works</text><text x="72" y="158" class="sub">It compares records, explains a possible match, and saves the team's decisions and evidence.</text>
+<rect x="72" y="218" width="300" height="170" rx="18" class="box"/><text x="98" y="253" class="label">START WITH A FILE</text><text x="98" y="292" class="boxt">Equipment list</text><text x="98" y="324" class="small">Product and software version</text><text x="98" y="352" class="small">Site, owner, and last check date</text>
+<rect x="72" y="444" width="300" height="222" rx="18" class="box"/><text x="98" y="480" class="label">PUBLIC NOTICES</text><text x="98" y="520" class="boxt">CISA and NIST</text><text x="98" y="551" class="boxt">Approved vendor websites</text><text x="98" y="585" class="small">Save source link and dates</text><text x="98" y="615" class="small">Use an older copy if a feed is down</text>
+<rect x="470" y="268" width="340" height="350" rx="20" class="dark"/><text x="502" y="309" class="label" fill="#8FC7BE">OTPROOF SERVICE</text><text x="502" y="358" class="darkt" fill="#FFFFFF">Check records</text><text x="502" y="394" class="darksmall" fill="#D0E0DF">Compare maker, product, and version</text><text x="502" y="425" class="darksmall" fill="#D0E0DF">Explain what matched or is missing</text><text x="502" y="456" class="darksmall" fill="#D0E0DF">Record review and work history</text><rect x="502" y="496" width="275" height="82" rx="12" fill="#25A99A"/><text x="522" y="531" class="darkt" fill="#FFFFFF">Matching rules</text><text x="522" y="557" class="darksmall" fill="#D0E0DF">Product identity + version evidence</text>
+<rect x="910" y="218" width="265" height="170" rx="18" class="box"/><text x="938" y="253" class="label">SAVED RECORDS</text><text x="938" y="294" class="boxt">Equipment and notices</text><text x="938" y="325" class="small">Reviews and work plans</text><text x="938" y="353" class="small">Evidence and source dates</text>
+<rect x="910" y="444" width="265" height="222" rx="18" class="box"/><text x="938" y="480" class="label">PEOPLE CHECK THE RESULT</text><text x="938" y="520" class="boxt">Reviewer checks match</text><text x="938" y="551" class="boxt">Engineer proposes work</text><text x="938" y="585" class="small">Approver checks plan and evidence</text><text x="938" y="615" class="small">A person is required to close</text>
+<rect x="1250" y="300" width="120" height="285" rx="18" class="box"/><text x="1270" y="339" class="label">RESULTS</text><text x="1270" y="388" class="boxt">Dashboard</text><text x="1270" y="419" class="small">Findings</text><text x="1270" y="460" class="boxt">PDF</text><text x="1270" y="491" class="small">Report</text><text x="1270" y="535" class="small">Action history</text>
 <path d="M372 302H455" class="line"/><path d="M372 555H435Q455 555 455 535V475" class="line"/><path d="M810 344H895" class="line"/><path d="M810 512H895" class="line"/><path d="M1175 520H1235" class="line"/>
-<rect x="484" y="704" width="690" height="115" rx="18" fill="#DDF3EF" stroke="#9CD8CE" stroke-width="2"/><text x="514" y="743" class="label">OPTIONAL · LOCAL ONLY</text><text x="514" y="779" class="boxt">Ollama-compatible LLM → schema-checked extraction / draft summary</text><text x="514" y="804" class="small">Suggestion only; no effect on applicability, approval, or remediation state.</text><path d="M645 704V635" class="dash"/>
-<text x="72" y="870" class="small">Public source egress only · no scanning · no exploitation · no equipment modification</text>
+<rect x="484" y="704" width="690" height="115" rx="18" fill="#DDF3EF" stroke="#9CD8CE" stroke-width="2"/><text x="514" y="743" class="label">OPTIONAL · LOCAL AI HELPER</text><text x="514" y="779" class="boxt">Can draft text fields and summaries from a notice</text><text x="514" y="804" class="small">Cannot decide a match, approve work, or change equipment.</text><path d="M645 704V635" class="dash"/>
+<text x="72" y="870" class="small">No device scan · no exploit · no remote query · no configuration changes</text>
 </svg>'''
     (ROOT / "OTProof_Architecture.svg").write_text(svg, encoding="utf-8")
 
@@ -1248,7 +1293,7 @@ def main() -> None:
                         shutil.copy2(pdf, ROOT / f"{stem}.pdf")
             else:
                 print(f"Office PDF rendering failed; retained the ReportLab PDF mirrors: {converted.stderr.strip()}")
-    print("Generated idea document, business/evaluation PDFs, 14-slide deck, and architecture SVG.")
+    print(f"Generated idea document, business/evaluation PDFs, {len(SLIDES)}-slide deck, and architecture SVG.")
 
 
 if __name__ == "__main__":

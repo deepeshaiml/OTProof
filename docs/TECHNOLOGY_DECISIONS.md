@@ -2,6 +2,10 @@
 
 Checked 2026-10-26. Direct dependency versions were installed in the project virtual environment and frontend lockfile and exercised with the current Python 3.12.13 / Node 26.9.0 toolchain. License values are package metadata or project license files; a production release still needs a generated SBOM and review of all transitive packages and model distribution terms.
 
+## In everyday terms
+
+The dashboard is the screen people use. The API is the service that checks requests and applies the rules. The database keeps the equipment, notices, decisions, and evidence records. The source adapters retrieve and cache public notices. The optional AI helper can suggest fields from a notice but does not make a match decision. The PDF and JSON exports package the record for review. The technology names in the tables below identify the open-source tools used to build each part.
+
 ## Architecture choices
 
 | Area | Selection | Reason and boundary |

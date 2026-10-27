@@ -2,6 +2,12 @@
 
 The demo uses the fictional **Cedar Valley Water Utility** inventory and public CISA advisory data. The plant, assets, owners, work items, and evidence are synthetic. No OT device is contacted or changed.
 
+## Explain OTProof in 30 seconds
+
+“OTProof compares the equipment list a utility already has with public security notices. It shows the product and version details behind a possible match, asks an engineer to check when information is missing, and keeps the human decision and evidence together. It does not connect to or change equipment.”
+
+For example, a real CISA notice names FactoryTalk View Site Edition version 13.0. The fictional asset `CV-HMI-001` is version `13.0.0`, so OTProof shows a possible match and links the notice. `CV-HMI-002` is version `14.0`, outside the version stated in that notice. `CV-HMI-005` has no recorded version, so it needs an engineer to check. A possible match is not yet a human decision or proof of remediation.
+
 ## Start the demo
 
 ### Local Python + Vite
@@ -90,3 +96,5 @@ The seed command is deliberately non-destructive and returns existing record cou
 - Internet source synchronization depends on CISA/NVD availability and may return throttling or stale cache messages. Offline fixture workflow is deterministic.
 - No local LLM run is required to complete the judge flow.
 - Evaluation cases are synthetic and small; they do not show field precision, labor savings, security certification, or operational risk reduction.
+
+For plain-language definitions and a step-by-step example, see [OTProof_Technical_Design.md](OTProof_Technical_Design.md#quick-glossary). Coding assistants can use [docs/AI_AGENT_GUIDE.md](docs/AI_AGENT_GUIDE.md) for repository context, safety boundaries, and an example output.
